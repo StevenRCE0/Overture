@@ -2,6 +2,7 @@
     export let imageArray = []
     export let timing = 100
     export let delay = 0
+    export let looping = false
 
     import {onDestroy, onMount} from "svelte"
     let playingIndex = 0
@@ -11,11 +12,14 @@
             unmountInterval = setInterval(() => {
                 console.log("playingIndex")
                 if (playingIndex >= imageArray.length - 1) {
-                    clearInterval(unmountInterval)
-                    console.log("done")
-                    return
+                    if (looping) {
+                        playingIndex = 0
+                    } else {
+                        clearInterval(unmountInterval)
+                    }
+                } else {
+                    playingIndex += 1
                 }
-                playingIndex += 1
             }, timing)
         }, delay)
     })

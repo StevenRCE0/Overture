@@ -1,4 +1,5 @@
 <svg width="100%" height="100%" viewBox="0 0 2388 1668" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect id="Artboard1" x="0" y="0" width="2388" height="1668" style="fill:none;"/>
     <g id="Artboard11" serif:id="Artboard1">
         <g transform="matrix(1,0,0,1,169.698,-51.2538)">
             <path d="M620.061,1076.44C614.357,1073.5 598.783,1054.42 612.576,1047.52C622.913,1042.36 637.723,1053.82 645.748,1049.81C663.109,1041.13 697.873,1024.16 715.522,1041.81" style="fill:none;stroke:black;stroke-width:8px;"/>
