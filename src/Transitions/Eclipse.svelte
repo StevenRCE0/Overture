@@ -10,6 +10,7 @@
     let eclipseActualSize = {x: 0, y: 0}
     let wormholeOffset = {x: 0, y:0}
     let puppyPosition = ''
+    let bindThePup = false
     $: actualOffset = {
         x: randProp.x * canvasFrame.width * 0.4 + canvasFrame.width * 0.2,
         y: randProp.y * canvasFrame.height * 0.8 + canvasFrame.height * 0.1
@@ -76,6 +77,8 @@
     onMount(() => {
         trigger = true
         setTimeout(() => {
+            bindThePup = true
+            puppyPosition = 'translate(calc(-50% + var(--anchorX)), calc(-50% + var(--anchorY)))'
             console.log(puppyPosition)
         }, 11000)
     })
@@ -92,7 +95,7 @@
         >
             <div id="Sol"></div>
             <div id="Aura"></div>
-            <div id="Pup" in:eclipseIn={{duration: 10000, easing: expoOut}} bind:clientWidth={eclipseActualSize.x} bind:clientHeight={eclipseActualSize.y}></div>
+            <div id="Pup" style={`transition: ${bindThePup ? '1s' : '0'}`} in:eclipseIn={{duration: 10000, easing: expoOut}} bind:clientWidth={eclipseActualSize.x} bind:clientHeight={eclipseActualSize.y}></div>
         </div>
         <div class="Stage">
             <Canvas width={canvasFrame.width} height={canvasFrame.height}>
