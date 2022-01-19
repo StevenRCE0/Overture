@@ -59,7 +59,7 @@
 <main>
     <div class="Heading">
         {#if initialized}
-            <ImageSequence imageArray={Packed} timing="450" options={{pupil: night ? 24 : 8}}/>
+            <ImageSequence imageArray={Packed} timing="450" options={{pupil: night ? 22 : 8}}/>
         {:else}
             <div style="width: 100%; height: 100%; " bind:clientWidth={introSize}>
                 <svg id="intro" viewBox="0 0 2388 1668" version="1.1" xmlns="http://www.w3.org/2000/svg"
