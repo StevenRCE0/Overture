@@ -60,7 +60,7 @@
                 x: actualOffset.x + eclipseActualSize.x / 2 * Math.cos(Math.PI * index / portions * 2),
                 y: actualOffset.y + eclipseActualSize.y / 2 * Math.sin(Math.PI * index / portions * 2)
             }
-            context.strokeStyle = "rgba(0, 0, 0, .005)"
+            context.strokeStyle = "rgba(0, 0, 0, 1)"
             context.beginPath();
             context.moveTo(actualOffset.x, actualOffset.y + wormholeOffset.y)
             context.lineTo(endPoint.x, endPoint.y)
@@ -84,13 +84,13 @@
                 bind:clientHeight={canvasFrame.height}
                 in:skyIn={{duration: 3000}}
         >
-            <div id="Sol"></div>
-            <div id="Aura"></div>
-            <div id="Pup" in:eclipseIn={{duration: 10000, easing: expoOut}} bind:clientWidth={eclipseActualSize.x} bind:clientHeight={eclipseActualSize.y}></div>
+            <div id="Sol" class="Planetarium"></div>
+            <div id="Aura" class="Planetarium"></div>
+            <div id="Pup" class="Planetarium" in:eclipseIn={{duration: 10000, easing: expoOut}} bind:clientWidth={eclipseActualSize.x} bind:clientHeight={eclipseActualSize.y}></div>
         </div>
         <div class="Stage">
             <Canvas width={canvasFrame.width} height={canvasFrame.height}>
-                <Layer {render} />
+<!--                <Layer {render} />-->
             </Canvas>
         </div>
 
@@ -121,6 +121,9 @@
         height: 40vmin;
         background: #f4f4f4;
         border-radius: 50%;
+    }
+    .Planetarium {
+        transition: 0.6s linear;
     }
 
     #Pup {
