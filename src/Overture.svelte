@@ -2,7 +2,8 @@
     import {onMount} from "svelte";
     import ImageSequence from "./Stuff/ImageSequence.svelte";
     import {Packed} from "./mob/in/Pack.svelte"
-    let trigger = false
+    import Eclipse from "./Transitions/Eclipse.svelte";
+    let eclipse = false
     let initialized = false
     let introSize
     function stroke(node, params) {
@@ -65,6 +66,12 @@
             </div>
         {/if}
     </div>
+    {#if eclipse }
+        <Eclipse />
+    {/if}
+    <button style="z-index: 9" on:click={() => {eclipse = !eclipse}}>
+        Eclipse
+    </button>
 </main>
 
 <style>
