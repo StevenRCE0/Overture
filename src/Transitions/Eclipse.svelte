@@ -2,10 +2,13 @@
     import {onMount} from "svelte";
     import {fade} from "svelte/transition"
     import {expoOut} from "svelte/easing"
+    import {Canvas, Layer, t} from "svelte-canvas"
 
     let canvasFrame = {width: undefined, height: undefined}
     let randProp = {x: Math.random(), y: Math.random()}
     let trigger = false
+    let eclipseActualSize = {x: 0, y: 0}
+    let wormholeOffset = {x: 0, y:0}
     $: actualOffset = {
         x: randProp.x * canvasFrame.width * 0.4 + canvasFrame.width * 0.2,
         y: randProp.y * canvasFrame.height * 0.8 + canvasFrame.height * 0.1
@@ -18,7 +21,6 @@
         `
 
     function eclipseIn(node, params) {
-        console.log('go')
         const actualOffset = {
             x: randProp.x * canvasFrame.width * 0.4 + canvasFrame.width * 0.2,
             y: randProp.y * canvasFrame.height * 0.8 + canvasFrame.height * 0.1
@@ -35,7 +37,6 @@
     }
 
     function skyIn(node, params) {
-        console.log(2)
         return {
             ...params,
             css: time => {
@@ -47,42 +48,69 @@
         }
     }
 
+    $: render = ({ context, width, height }) => {
+        context.fillStyle = `hsl(${$t / 40}, 100%, 50%)`;
+        const actualOffset = {
+            x: randProp.x * width * 0.4 + width * 0.2,
+            y: randProp.y * height * 0.8 + height * 0.1
+        }
+        let portions = 40
+        for (let index = 0; index < portions; index++) {
+            const endPoint = {
+                x: actualOffset.x + eclipseActualSize.x / 2 * Math.cos(Math.PI * index / portions * 2),
+                y: actualOffset.y + eclipseActualSize.y / 2 * Math.sin(Math.PI * index / portions * 2)
+            }
+            context.strokeStyle = "rgba(0, 0, 0, .005)"
+            context.beginPath();
+            context.moveTo(actualOffset.x, actualOffset.y + wormholeOffset.y)
+            context.lineTo(endPoint.x, endPoint.y)
+            context.closePath()
+            context.lineWidth = 2
+            context.stroke()
+        }
+    };
+
     onMount(() => {
         trigger = true
     })
 </script>
 {#if trigger}
     <main style={styleVariable}>
-        <div id="Moss" in:fade={{duration: 700}}></div>
+        <div id="Moss" class="Stage" in:fade={{duration: 700}}></div>
         <div
                 id="Sky"
+                class="Stage"
                 bind:clientWidth={canvasFrame.width}
                 bind:clientHeight={canvasFrame.height}
                 in:skyIn={{duration: 3000}}
         >
             <div id="Sol"></div>
             <div id="Aura"></div>
-            <div id="Pup" in:eclipseIn={{duration: 10000, easing: expoOut}}></div>
+            <div id="Pup" in:eclipseIn={{duration: 10000, easing: expoOut}} bind:clientWidth={eclipseActualSize.x} bind:clientHeight={eclipseActualSize.y}></div>
         </div>
+        <div class="Stage">
+            <Canvas width={canvasFrame.width} height={canvasFrame.height}>
+                <Layer {render} />
+            </Canvas>
+        </div>
+
     </main>
 
 {/if}
 
 <style>
-    #Moss {
+    .Stage {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: #fff;
     }
+    #Moss {
+        background-color: #fff;
+    }
+
     #Sky {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
         background: hsl(10, 60%, 0%);
         z-index: 8;
     }
@@ -141,6 +169,12 @@
         }
         70% {
             transform: skew(30deg, 0deg) scale(1.1);
+        }
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        #Moss {
+            background-color: hsl(167, 4%, 54%);;
         }
     }
 </style>

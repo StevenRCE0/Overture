@@ -1,3 +1,7 @@
+<script>
+    export let options = {}
+</script>
+
 <svg width="100%" height="100%" viewBox="0 0 2388 1669" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
     <g transform="matrix(1,0,0,1,-4976,-6)">
         <g id="Artboard3" transform="matrix(1,0,0,1,3.41061e-13,6.05687)">

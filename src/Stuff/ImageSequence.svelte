@@ -3,6 +3,7 @@
     export let timing = 100
     export let delay = 0
     export let looping = false
+    export let options = {}
 
     import {onDestroy, onMount} from "svelte"
     let playingIndex = 0
@@ -10,7 +11,6 @@
     onMount(() => {
         setTimeout(() => {
             unmountInterval = setInterval(() => {
-                console.log("playingIndex")
                 if (playingIndex >= imageArray.length - 1) {
                     if (looping) {
                         playingIndex = 0
@@ -27,4 +27,10 @@
         unmountInterval || clearInterval(unmountInterval)
     })
 </script>
-<svelte:component this={imageArray[playingIndex]} />
+<svelte:component this={imageArray[playingIndex]} {options} />
+<style>
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+</style>
