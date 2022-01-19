@@ -79,7 +79,6 @@
         setTimeout(() => {
             bindThePup = true
             puppyPosition = 'translate(calc(-50% + var(--anchorX)), calc(-50% + var(--anchorY)))'
-            console.log(puppyPosition)
         }, 11000)
     })
 </script>
