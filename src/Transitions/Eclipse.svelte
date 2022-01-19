@@ -29,6 +29,7 @@
             ...params,
             css: time => {
                 return `
+                    transition: none;
                     transform: translate(calc(-50% + ${time * actualOffset.x}px), calc(-50% + ${(1 - time) * canvasFrame.height / 9 + actualOffset.y}px));
                     opacity: ${time};
                     `
