@@ -29,5 +29,9 @@
     "sirv-cli": "^2.0.0",
     "svelte-canvas": "^0.7.1",
     "svelte-router-spa": "^6.0.3"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "semi": false
   }
 }
