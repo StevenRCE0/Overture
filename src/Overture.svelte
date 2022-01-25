@@ -8,7 +8,6 @@
     let initialized = false
     let introSize
     let night = window.matchMedia("(prefers-color-scheme: dark)").matches
-    let appearanceListener
     const changeAppearance = () => {
         night = window.matchMedia("(prefers-color-scheme: dark)").matches
     }
