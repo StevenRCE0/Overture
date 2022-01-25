@@ -86,11 +86,11 @@
     <main style={styleVariable}>
         <div id="Moss" class="Stage" in:fade={{duration: 700}}></div>
         <div
-                id="Sky"
-                class="Stage"
-                bind:clientWidth={canvasFrame.width}
-                bind:clientHeight={canvasFrame.height}
-                in:skyIn={{duration: 3000}}
+            id="Sky"
+            class="Stage"
+            bind:clientWidth={canvasFrame.width}
+            bind:clientHeight={canvasFrame.height}
+            in:skyIn={{duration: 3000}}
         >
             <div id="Sol"></div>
             <div id="Aura"></div>
