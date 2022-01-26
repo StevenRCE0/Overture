@@ -4,7 +4,7 @@
     $: triggerText = timeCounter ? "Stop" : "Continue"
     const target = "https://c.rcex.live:8"
     onMount(() => {
-        if (!process.env.ROLLUP_WATCH) {
+        if (process.env.BUILD === 'development') {
             timeCounter = setTimeout(() => {
                 window.location.replace(target)
             }, 5000)

@@ -5,14 +5,8 @@
 
     let anchor: HTMLElement
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
+    const renderer = new THREE.WebGLRenderer({antialias: true})
     const camera = new THREE.PerspectiveCamera()
-    camera.fov = 45
-    camera.near = 1
-    camera.far = 500
-    camera.aspect = anchor.clientWidth / anchor.clientHeight
-    camera.position.set(0, 0, 100)
-    camera.lookAt(0, 0, 0)
     const scene = new THREE.Scene()
     scene.background = new THREE.Color("0xedf2f7")
 
@@ -34,7 +28,7 @@
         color: 0x66ccff,
     })
     const cubeMesh = new THREE.Mesh(cube, cubeMaterial)
-
+    
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
     directionalLight.translateOnAxis(new THREE.Vector3(0.2, 2, 3), 10)
@@ -48,6 +42,13 @@
 
     onMount(() => {
         anchor.appendChild(renderer.domElement)
+
+        camera.fov = 45
+        camera.near = 1
+        camera.far = 500
+        camera.aspect = anchor.clientWidth / anchor.clientHeight
+        camera.position.set(0, 0, 100)
+        camera.lookAt(0, 0, 0)
 
         scene.add(line)
         scene.add(cubeMesh)
