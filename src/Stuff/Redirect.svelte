@@ -1,26 +1,29 @@
 <script lang="ts">
     import { onMount } from "svelte"
     let timeCounter: NodeJS.Timeout = null
-    let triggerText = "Stop"
+    $: triggerText = timeCounter ? "Stop" : "Continue"
+    const target = "https://c.rcex.live:8"
     onMount(() => {
-        timeCounter = setTimeout(() => {
-            window.location.replace("https://c.rcex.live:8")
-        }, 5000)
+        if (!process.env.ROLLUP_WATCH) {
+            timeCounter = setTimeout(() => {
+                window.location.replace(target)
+            }, 5000)
+        }
     })
     function triggerHandler() {
         if (!timeCounter) {
-            window.location.replace("https://c.rcex.live:8")
+            window.location.replace(target)
             return
         }
         clearTimeout(timeCounter)
         timeCounter = null
-        triggerText = 'Continue'
     }
 </script>
-
+<title>Coils</title>
 <main>
     <h1>We're heading to the good old website for now...</h1>
-    <button id="Trigger" on:click={() => triggerHandler()}>{triggerText}</button>
+    <button id="Trigger" on:click={() => triggerHandler()}>{triggerText}</button
+    >
 </main>
 
 <style>
@@ -31,6 +34,7 @@
         transition: 1s background-color;
         background-color: #fff;
         text-align: right;
+        box-shadow: inset 10pt 10pt hsl(215, 95%, 27%), inset -10pt -10pt hsl(215, 95%, 27%);
     }
     @media screen and (prefers-color-scheme: dark) {
         main {
