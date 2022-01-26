@@ -3,8 +3,11 @@
     let timeCounter: NodeJS.Timeout = null
     $: triggerText = timeCounter ? "Stop" : "Continue"
     const target = "https://c.rcex.live:8"
+    let isProduction: boolean
     onMount(() => {
-        if (process.env.BUILD === 'development') {
+        console.log(isProduction);
+        
+        if (isProduction) {
             timeCounter = setTimeout(() => {
                 window.location.replace(target)
             }, 5000)
