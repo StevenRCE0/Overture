@@ -20,6 +20,7 @@
         timeCounter = null
     }
 </script>
+
 <title>Coils</title>
 <main>
     <h1>We're heading to the good old website for now...</h1>
@@ -35,7 +36,8 @@
         transition: 1s background-color;
         background-color: #fff;
         text-align: right;
-        box-shadow: inset 10pt 10pt hsl(215, 95%, 27%), inset -10pt -10pt hsl(215, 95%, 27%);
+        box-shadow: inset 10pt 10pt hsl(215, 95%, 27%),
+            inset -10pt -10pt hsl(215, 95%, 27%);
     }
     @media screen and (prefers-color-scheme: dark) {
         main {

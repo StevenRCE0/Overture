@@ -2,10 +2,11 @@
     import * as THREE from "three"
     import { onMount } from "svelte"
     import { watchResize } from "svelte-watch-resize"
+    import { t } from "svelte-canvas"
 
     let anchor: HTMLElement
 
-    const renderer = new THREE.WebGLRenderer({antialias: true})
+    const renderer = new THREE.WebGLRenderer({ antialias: true })
     const camera = new THREE.PerspectiveCamera()
     const scene = new THREE.Scene()
     scene.background = new THREE.Color("0xedf2f7")
@@ -19,7 +20,7 @@
     const geometry = new THREE.BufferGeometry().setFromPoints(points)
     const line = new THREE.Line(geometry, material)
 
-    const cube = new THREE.BoxBufferGeometry(10, 10, 10)
+    const cube = new THREE.BoxBufferGeometry(30, 30, 30)
     cube.rotateX(0.15 * Math.PI)
     cube.rotateY(0.1 * Math.PI)
     const cubeMaterial = new THREE.MeshStandardMaterial({
@@ -28,10 +29,17 @@
         color: 0x66ccff,
     })
     const cubeMesh = new THREE.Mesh(cube, cubeMaterial)
-    
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
     directionalLight.translateOnAxis(new THREE.Vector3(0.2, 2, 3), 10)
+
+    function timeFunction() {
+        const x = Math.sin(t)
+        const y = Math.cos(t)
+        const z = Math.sin(t * 0.5)
+        return new THREE.Vector3(x, y, z)
+    }
 
     function handleResize(node: HTMLElement) {
         camera.aspect = anchor.clientWidth / anchor.clientHeight

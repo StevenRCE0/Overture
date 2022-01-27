@@ -11,7 +11,7 @@
         Mesh,
         MeshStandardMaterial,
         WebGLRenderer,
-        SphereGeometry
+        SphereGeometry,
     } from "svelthree" // or from "https://unpkg.com/svelthree@latest/dist/svelthree.mjs" in REPL
     let cubeGeometry = new BoxBufferGeometry(1, 1, 1)
     let cubeMaterial = new MeshStandardMaterial()
