@@ -115,7 +115,7 @@
         max="10"
         step="0.01"
         bind:value={spotlightLevers.x}
-        on:change={() => render()}
+        on:input={() => render()}
     />
     <input
         type="range"
@@ -123,7 +123,7 @@
         max="10"
         step="0.01"
         bind:value={spotlightLevers.y}
-        on:change={() => render()}
+        on:input={() => render()}
     />
     <input
         type="range"
@@ -131,7 +131,7 @@
         max="10"
         step="0.01"
         bind:value={spotlightLevers.z}
-        on:change={() => render()}
+        on:input={() => render()}
     />
 </div>
 <main bind:this={anchor} use:watchResize={handleResize} />

@@ -1,10 +1,13 @@
 import * as THREE from "three"
 
+// Use 360 * 566 for the size of the cover image
 export let coverHero = "/cc/sf/why.jpg"
+let loaded = false
 
 const heroPrint = new THREE.MeshStandardMaterial({
     map: new THREE.TextureLoader().load(coverHero, () => {
         console.log("loaded")
+        loaded = true
         booklet.add(new THREE.Mesh(CoverLayerGeometry, heroPrint))
     }),
     metalness: 0.5,
@@ -13,24 +16,26 @@ const heroPrint = new THREE.MeshStandardMaterial({
 const CoverLayerGeometry = new THREE.PlaneGeometry(36, 56.56)
 const Cover = new THREE.BoxGeometry(36, 56.56, 1)
 const Cover2 = new THREE.BoxGeometry(36, 56.56, 1)
-const Papers = new THREE.BoxGeometry(35.6, 56.16, 2)
-const segment1 = new THREE.BoxGeometry(2, 56.36, 3.6)
-const segment2 = new THREE.BoxGeometry(2, 56.56, 4)
+const Papers = new THREE.BoxGeometry(37.6, 56.16, 2)
+const segment1 = new THREE.BoxGeometry(1.2, 56.36, 0.6)
+const segment10 = new THREE.BoxGeometry(1.2, 56.36, 0.6)
+const segment2 = new THREE.BoxGeometry(1, 56.56, 4)
 CoverLayerGeometry.translate(0, 0, 2.001)
 Cover.translate(0, 0, 1.5)
 Cover2.translate(0, 0, -1.5)
-Papers.translate(-0.2, 0, 0)
-segment1.translate(-19, 0, 0)
-segment2.translate(-21, 0, 0)
+Papers.translate(-1.2, 0, 0)
+segment1.translate(-18.6, 0, 1.3)
+segment10.translate(-18.6, 0, -1.3)
+segment2.translate(-19.6, 0, 0)
 const bookletPaper = new THREE.MeshStandardMaterial({
     color: 0xe3e3e3,
     roughness: 0.8,
-    metalness: 0.2
+    metalness: 0.2,
 })
 const bookletPaper2 = new THREE.MeshStandardMaterial({
     color: 0xdddddd,
     roughness: 0.8,
-    metalness: 0.2
+    metalness: 0.2,
 })
 const bookletPaperArticle = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
@@ -39,8 +44,15 @@ const bookletPaperArticle = new THREE.MeshStandardMaterial({
 const booklet = new THREE.Object3D()
 booklet.add(new THREE.Mesh(Cover, bookletPaper))
 booklet.add(new THREE.Mesh(segment1, bookletPaper2))
+booklet.add(new THREE.Mesh(segment10, bookletPaper2))
 booklet.add(new THREE.Mesh(segment2, bookletPaper))
 booklet.add(new THREE.Mesh(Cover2, bookletPaper2))
 booklet.add(new THREE.Mesh(Papers, bookletPaperArticle))
-booklet.matrixAutoUpdate = true
 export default booklet
+export const coverLoaded = new Promise((resolve) => {
+    setInterval(() => {
+        if (loaded) {
+            resolve(true)
+        }
+    }, 50)
+})
