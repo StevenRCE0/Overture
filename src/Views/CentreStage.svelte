@@ -9,11 +9,12 @@
     let anchor: HTMLElement
     export let spotlightLevers: { [index: string]: number } = {
         x: 0,
-        y: -2,
-        z: 10,
+        y: 5.2,
+        z: 4,
     }
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.shadowMap.enabled = true
     const camera = new THREE.PerspectiveCamera()
     camera.translateOnAxis(new THREE.Vector3(0, 0, 1), 100)
     camera.fov = 90
@@ -21,12 +22,13 @@
     camera.far = 500
     const regulatedTranslation = 100
     const scene = new THREE.Scene()
+    scene.fog = new THREE.Fog(0xffffff, 200, 1000)
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
 
     export function render() {
         console.log(spotlightLevers)
-        const Spotlight = new THREE.SpotLight(0xffffff, 0.5)
+        const Spotlight = new THREE.SpotLight(0xffffff, 0.4)
 
         Spotlight.translateOnAxis(
             new THREE.Vector3(
@@ -34,11 +36,14 @@
                 spotlightLevers.y,
                 spotlightLevers.z
             ),
-            20
+            30
         )
-        Spotlight.decay = 0.5
+        Spotlight.decay = 0
         Spotlight.castShadow = true
-        Spotlight.angle = Math.PI / 2
+        Spotlight.shadow.mapSize.width = 2048
+        Spotlight.shadow.mapSize.height = 2048
+        Spotlight.shadow.camera.near = 0.5
+        Spotlight.shadow.camera.far = 5000
 
         const wallBack = new THREE.PlaneGeometry(
             window.innerWidth,
@@ -70,10 +75,15 @@
             )
         )
         const wallBackMesh = new THREE.Mesh(wallBack, wallMaterial)
+        wallBackMesh.receiveShadow = true
         const leftWallMesh = new THREE.Mesh(leftWall, wallMaterial)
+        leftWallMesh.receiveShadow = true
         const rightWallMesh = new THREE.Mesh(rightWall, wallMaterial)
+        rightWallMesh.receiveShadow = true
         const floorMesh = new THREE.Mesh(floor, wallMaterial)
+        floorMesh.receiveShadow = true
         const ceilingMesh = new THREE.Mesh(ceiling, wallMaterial)
+        ceilingMesh.receiveShadow = true
         camera.aspect = window.innerWidth / window.innerHeight
 
         renderer.setSize(window.innerWidth, window.innerHeight)
