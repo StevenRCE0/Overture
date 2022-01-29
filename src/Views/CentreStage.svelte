@@ -3,6 +3,8 @@
     import { onMount } from "svelte"
     import { watchResize } from "svelte-watch-resize"
 
+    export let objects: THREE.Object3D[] = []
+
     let anchor: HTMLElement
     let lever: { [index: string]: number } = {
         x: 0,
@@ -16,11 +18,10 @@
     camera.fov = 90
     camera.near = 1
     camera.far = 500
+    const regulatedTranslation = 100
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color("0xedf2f7")
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
-    let init = false
 
     function render() {
         console.log(lever)
@@ -33,8 +34,6 @@
         Spotlight.decay = 0.5
         Spotlight.castShadow = true
         Spotlight.angle = Math.PI / 2
-        const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4)
-        directionalLight2.translateOnAxis(new THREE.Vector3(-1, -0.2, 1), 10)
 
         const wallBack = new THREE.PlaneGeometry(
             window.innerWidth,
@@ -48,10 +47,10 @@
         rightWall.rotateY(-Math.PI / 2)
         floor.rotateX(-Math.PI / 2)
         ceiling.rotateX(Math.PI / 2)
-        leftWall.translate(-window.innerWidth / 3, 0, -100)
-        rightWall.translate(window.innerWidth / 3, 0, -100)
-        floor.translate(0, -window.innerHeight / 3, -100)
-        ceiling.translate(0, window.innerHeight / 3, -100)
+        leftWall.translate(-window.innerWidth / 3, 0, -regulatedTranslation)
+        rightWall.translate(window.innerWidth / 3, 0, -regulatedTranslation)
+        floor.translate(0, -window.innerHeight / 3, -regulatedTranslation)
+        ceiling.translate(0, window.innerHeight / 3, -regulatedTranslation)
         const wallMaterial = new THREE.MeshStandardMaterial({
             metalness: 0,
             roughness: 0.6,
@@ -60,7 +59,7 @@
         wallBack.translate(
             0,
             0,
-            -Math.min(window.innerHeight, window.innerWidth) / 2
+            -(Math.min(Math.min(window.innerHeight, window.innerWidth) / 2, camera.far - regulatedTranslation))
         )
         const wallBackMesh = new THREE.Mesh(wallBack, wallMaterial)
         const leftWallMesh = new THREE.Mesh(leftWall, wallMaterial)
@@ -76,13 +75,14 @@
         scene.clear()
         scene.add(ambientLight)
         scene.add(Spotlight)
-        // scene.add(directionalLight2)
         scene.add(wallBackMesh)
         scene.add(leftWallMesh)
         scene.add(rightWallMesh)
         scene.add(floorMesh)
         scene.add(ceilingMesh)
-        init = true
+        for (const object of objects) {
+            scene.add(object)
+        }
         renderer.render(scene, camera)
     }
 
@@ -96,7 +96,7 @@
     })
 </script>
 
-<div style="display: block; position: fixed; z-index: 999; top 50px; left 50px">
+<div style="display: block; position: fixed; z-index: 999; top: 50px; left: 50px">
     <input
         type="range"
         min="-10"
