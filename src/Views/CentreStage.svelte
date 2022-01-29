@@ -4,6 +4,7 @@
     import { watchResize } from "svelte-watch-resize"
 
     export let objects: THREE.Object3D[] = []
+    export let clear = false
 
     let anchor: HTMLElement
     export let spotlightLevers: { [index: string]: number } = {
@@ -23,12 +24,16 @@
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
 
-    function render() {
+    export function render() {
         console.log(spotlightLevers)
         const Spotlight = new THREE.SpotLight(0xffffff, 0.5)
 
         Spotlight.translateOnAxis(
-            new THREE.Vector3(spotlightLevers.x, spotlightLevers.y, spotlightLevers.z),
+            new THREE.Vector3(
+                spotlightLevers.x,
+                spotlightLevers.y,
+                spotlightLevers.z
+            ),
             20
         )
         Spotlight.decay = 0.5
@@ -59,7 +64,10 @@
         wallBack.translate(
             0,
             0,
-            -(Math.min(Math.min(window.innerHeight, window.innerWidth) / 2, camera.far - regulatedTranslation))
+            -Math.min(
+                Math.min(window.innerHeight, window.innerWidth) / 2,
+                camera.far - regulatedTranslation
+            )
         )
         const wallBackMesh = new THREE.Mesh(wallBack, wallMaterial)
         const leftWallMesh = new THREE.Mesh(leftWall, wallMaterial)
@@ -75,11 +83,13 @@
         scene.clear()
         scene.add(ambientLight)
         scene.add(Spotlight)
-        scene.add(wallBackMesh)
-        scene.add(leftWallMesh)
-        scene.add(rightWallMesh)
-        scene.add(floorMesh)
-        scene.add(ceilingMesh)
+        if (!clear) {
+            scene.add(wallBackMesh)
+            scene.add(leftWallMesh)
+            scene.add(rightWallMesh)
+            scene.add(floorMesh)
+            scene.add(ceilingMesh)
+        }
         for (const object of objects) {
             scene.add(object)
         }
@@ -96,7 +106,9 @@
     })
 </script>
 
-<div style="display: block; position: fixed; z-index: 999; top: 50px; left: 50px">
+<div
+    style="display: block; position: fixed; z-index: 999; top: 50px; left: 50px"
+>
     <input
         type="range"
         min="-10"

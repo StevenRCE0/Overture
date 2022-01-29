@@ -5,7 +5,8 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "start": "sirv public -s --no-clear",
+        "start": "node serve.js",
+        "sirv": "sirv public -s",
         "check": "svelte-check --tsconfig ./tsconfig.json"
     },
     "devDependencies": {
@@ -28,11 +29,12 @@
     },
     "dependencies": {
         "@rollup/plugin-replace": "^3.0.1",
-        "sirv-cli": "^2.0.0",
+        "express": "^4.17.2",
+        "express-http-proxy": "^1.6.3",
         "svelte-canvas": "^0.7.1",
         "svelte-router-spa": "^6.0.3",
         "svelte-watch-resize": "^1.0.3",
-        "three": "^0.136.0"
+        "three": "^0.137.5"
     },
     "prettier": {
         "tabWidth": 4,
