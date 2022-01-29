@@ -1,15 +1,22 @@
 import * as THREE from "three"
 
 // Use 360 * 566 for the size of the cover image
-export let coverHero = "/cc/sf/why.jpg"
+export let coverHero = "/sf/why.jpg"
 let loaded = false
 
 const heroPrint = new THREE.MeshPhongMaterial({
-    map: new THREE.TextureLoader().load(coverHero, () => {
-        console.log("loaded")
-        loaded = true
-        booklet.add(coverHeroMesh)
-    }),
+    map: new THREE.TextureLoader().load(
+        coverHero,
+        () => {
+            console.log("loaded")
+            loaded = true
+            booklet.add(coverHeroMesh)
+        },
+        () => {},
+        (error) => {
+            console.warn(error)
+        }
+    ),
     shininess: 20,
 })
 const CoverLayerGeometry = new THREE.PlaneGeometry(36, 56.56)
@@ -43,7 +50,7 @@ const BookletMeshes = [
     new THREE.Mesh(Cover2, bookletPaper),
     new THREE.Mesh(segment1, bookletPaper),
     new THREE.Mesh(segment10, bookletPaper),
-    new THREE.Mesh(segment2, bookletPaper)
+    new THREE.Mesh(segment2, bookletPaper),
 ]
 for (const mesh of BookletMeshes) {
     mesh.castShadow = true

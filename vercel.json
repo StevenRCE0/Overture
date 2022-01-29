@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/sf/(.*)",
+      "destination": "/api/proxy"
+    }
+  ]
+}

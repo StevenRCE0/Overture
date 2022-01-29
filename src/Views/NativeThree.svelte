@@ -77,11 +77,11 @@
 </script>
 
 <main bind:this={anchor} use:watchResize={handleResize} />
-
+<img src="/sf/why.jpg" alt="why" />
 <style>
     main {
         height: 100vh;
         width: 100vw;
-        display: block;
+        display: none;
     }
 </style>
