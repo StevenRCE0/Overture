@@ -41,7 +41,8 @@ export default {
 	},
 	plugins: [
 		replace({
-			isProduction: production
+			isProduction: production,
+			preventAssignment: true
 		}),
 		svelte({
 			preprocess: sveltePreprocess({ sourceMap: !production }),
