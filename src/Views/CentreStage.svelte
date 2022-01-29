@@ -6,7 +6,7 @@
     export let objects: THREE.Object3D[] = []
 
     let anchor: HTMLElement
-    let lever: { [index: string]: number } = {
+    export let spotlightLevers: { [index: string]: number } = {
         x: 0,
         y: -2,
         z: 10,
@@ -24,11 +24,11 @@
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
 
     function render() {
-        console.log(lever)
+        console.log(spotlightLevers)
         const Spotlight = new THREE.SpotLight(0xffffff, 0.5)
 
         Spotlight.translateOnAxis(
-            new THREE.Vector3(lever.x, lever.y, lever.z),
+            new THREE.Vector3(spotlightLevers.x, spotlightLevers.y, spotlightLevers.z),
             20
         )
         Spotlight.decay = 0.5
@@ -102,7 +102,7 @@
         min="-10"
         max="10"
         step="0.01"
-        bind:value={lever.x}
+        bind:value={spotlightLevers.x}
         on:change={() => render()}
     />
     <input
@@ -110,7 +110,7 @@
         min="-10"
         max="10"
         step="0.01"
-        bind:value={lever.y}
+        bind:value={spotlightLevers.y}
         on:change={() => render()}
     />
     <input
@@ -118,7 +118,7 @@
         min="-10"
         max="10"
         step="0.01"
-        bind:value={lever.z}
+        bind:value={spotlightLevers.z}
         on:change={() => render()}
     />
 </div>
