@@ -13,12 +13,19 @@
 
     const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
 
-    const points = []
-    points.push(new THREE.Vector3(-10, 0, 0))
-    points.push(new THREE.Vector3(0, 10, 0))
-    points.push(new THREE.Vector3(10, 0, 0))
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    const line = new THREE.Line(geometry, material)
+    class Line {
+        line: THREE.Line<THREE.BufferGeometry, THREE.LineBasicMaterial>
+        constructor() {
+            const points = []
+            points.push(new THREE.Vector3(-10, 0, 0))
+            points.push(new THREE.Vector3(0, 10, 0))
+            points.push(new THREE.Vector3(10, 0, 0))
+            const geometry = new THREE.BufferGeometry().setFromPoints(points)
+            this.line = new THREE.Line(geometry, material)
+        }
+        
+    }
+    
 
     const cube = new THREE.BoxBufferGeometry(30, 30, 30)
     cube.rotateX(0.15 * Math.PI)
@@ -51,19 +58,20 @@
     onMount(() => {
         anchor.appendChild(renderer.domElement)
 
-        camera.fov = 45
+        camera.fov = 35
         camera.near = 1
         camera.far = 500
         camera.aspect = anchor.clientWidth / anchor.clientHeight
         camera.position.set(0, 0, 100)
         camera.lookAt(0, 0, 0)
 
-        scene.add(line)
+        // scene.add(new Line().line)
         scene.add(cubeMesh)
         scene.add(ambientLight)
         scene.add(directionalLight)
 
         renderer.setSize(anchor.clientWidth, anchor.clientHeight)
+        renderer.setPixelRatio(window.devicePixelRatio)
         renderer.render(scene, camera)
     })
 </script>
