@@ -11,8 +11,7 @@ interface BookletProps {
 }
 
 class BookLet {
-    cover: string
-    colour: string
+    preferences: BookletProps
     loaded = false
     book: THREE.Object3D
     tape: THREE.Object3D
@@ -24,21 +23,21 @@ class BookLet {
         }, 50)
     })
 
-    constructor(preferences: BookletProps) {
-        let props = {
+    constructor(preferences?: BookletProps) {
+        let presetProps = {
             cover: "/sf/why.jpg",
             colour: "0xe3e3e3",
             title: "Tape title TO test",
             author: "Me",
-            comment: "I don't know",
+            comment:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra. Orci eu lobortis elementum nibh tellus molestie. Vulputate dignissim suspendisse in est. Vel pharetra vel turpis nunc. Malesuada nunc vel risus commodo. Nisi vitae suscipit tellus mauris. Posuere morbi leo urna molestie at elementum eu. Urna duis convallis convallis tellus. Urna molestie at elementum eu. Nunc sed blandit libero volutpat.",
         }
-        Object.assign(props, preferences)
-        this.cover = props.cover
-        this.colour = props.colour
+        Object.assign(presetProps, preferences)
+        this.preferences = presetProps
 
         const heroPrint = new THREE.MeshPhongMaterial({
             map: new THREE.TextureLoader().load(
-                this.cover,
+                this.preferences.cover,
                 () => {
                     console.log("loaded")
                     this.loaded = true
@@ -66,7 +65,7 @@ class BookLet {
         segment10.translate(-18.6, 0, -1.3)
         segment2.translate(-19.6, 0, 0)
         const bookletPaper = new THREE.MeshPhongMaterial({
-            color: this.colour,
+            color: this.preferences.colour,
             shininess: 20,
         })
         const bookletPaperArticle = new THREE.MeshStandardMaterial({
@@ -93,15 +92,19 @@ class BookLet {
         const tapeDimensions = {
             width: 100,
             height: 500,
-            titleMargin: ratioPixels(4),
+            margin: ratioPixels(0.6),
             titleSize: ratioPixels(8),
             titleLineHeight: ratioPixels(12),
+            commentSize: ratioPixels(3),
+            commentLineHeight: ratioPixels(6),
         }
         function ratioPixels(given: number): number {
-            return given * window.devicePixelRatio * 10
+            return given * window.devicePixelRatio * 5
         }
         const tapeText = document.createElement("canvas")
         const glyphs = tapeText.getContext("2d")
+        let writerOffset = ratioPixels(38)
+
         tapeText.width = ratioPixels(tapeDimensions.width)
         tapeText.height = ratioPixels(tapeDimensions.height)
         glyphs.fillStyle = "white"
@@ -109,19 +112,31 @@ class BookLet {
         glyphs.font = `bold ${tapeDimensions.titleSize}pt 'Times New Roman'`
         glyphs.fillStyle = "black"
         glyphs.textAlign = "center"
-        wrapText(
-            glyphs,
-            toTitleCase(props.title),
-            ratioPixels(tapeDimensions.width) / 2,
-            ratioPixels(38),
-            ratioPixels(tapeDimensions.width) - (tapeDimensions.titleMargin * 2),
-            tapeDimensions.titleLineHeight
-        )
-        console.log(
-            props.title,
-            ratioPixels(tapeDimensions.width) - 2 * tapeDimensions.titleMargin,
-            tapeDimensions.titleSize
-        )
+
+        writerOffset +=
+            wrapText(
+                glyphs,
+                toTitleCase(this.preferences.title),
+                ratioPixels(tapeDimensions.width) / 2,
+                writerOffset,
+                ratioPixels(tapeDimensions.width) - tapeDimensions.margin * 2,
+                tapeDimensions.titleLineHeight
+            ) * tapeDimensions.titleLineHeight
+
+        glyphs.font = `normal ${tapeDimensions.commentSize}pt 'Times New Roman'`
+        glyphs.fillStyle = "black"
+        glyphs.textAlign = "left"
+        console.log(writerOffset)
+
+        writerOffset +=
+            wrapText(
+                glyphs,
+                this.preferences.comment,
+                ratioPixels(tapeDimensions.margin),
+                writerOffset,
+                ratioPixels(tapeDimensions.width) - tapeDimensions.margin * 10,
+                tapeDimensions.commentLineHeight
+            ) * tapeDimensions.commentLineHeight
 
         const tapeTextTexture = new THREE.Texture(tapeText)
         tapeTextTexture.needsUpdate = true
@@ -131,7 +146,7 @@ class BookLet {
             tapeDimensions.height,
             1
         )
-        tapeGeometry.translate(0, -tapeDimensions.height / 2, 0)
+        tapeGeometry.translate(0, -tapeDimensions.height / 2, -10)
         const tapeMesh = new THREE.Mesh(
             tapeGeometry,
             new THREE.MeshStandardMaterial({

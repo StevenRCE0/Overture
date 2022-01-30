@@ -55,6 +55,7 @@ export function wrapText(
 ) {
     var words = text.split(" ")
     var line = ""
+    var lineCount = 1
 
     for (var n = 0; n < words.length; n++) {
         var testLine = line + words[n] + " "
@@ -64,9 +65,13 @@ export function wrapText(
             context.fillText(line, x, y)
             line = words[n] + " "
             y += lineHeight
+            lineCount += 1
         } else {
             line = testLine
         }
     }
     context.fillText(line, x, y)
+    console.log("lineCount", lineCount)
+
+    return lineCount
 }

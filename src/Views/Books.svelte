@@ -2,7 +2,7 @@
     import CentreStage from "../Views/CentreStage.svelte"
     import Booklet from "../Stuff/Booklet"
 import { Vector3 } from "three";
-    const book = new Booklet({colour: 0x992323})
+    const book = new Booklet({colour: 0x992323, title: 'I Love yuu'})
     const tape = book.tape
     const processedBook = book.book
     processedBook.translateOnAxis(new Vector3(0, 15, -5), 1)
