@@ -92,7 +92,7 @@ class BookLet {
 
         const tapeDimensions = {
             width: 100,
-            height: 300,
+            height: 500,
             titleMargin: ratioPixels(4),
             titleSize: ratioPixels(8),
             titleLineHeight: ratioPixels(12),
