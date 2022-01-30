@@ -4,7 +4,7 @@ import { multiLineTitle, toTitleCase, wrapText } from "../workers/textProcess"
 // Use 360 * 566 for the size of the cover image
 interface BookletProps {
     cover?: string
-    colour?: string
+    colour?: THREE.ColorRepresentation
     title?: string
     author?: string
     comment?: string
@@ -24,15 +24,15 @@ class BookLet {
         }, 50)
     })
 
-    constructor(
-        props: BookletProps = {
+    constructor(preferences: BookletProps) {
+        let props = {
             cover: "/sf/why.jpg",
             colour: "0xe3e3e3",
             title: "Tape title TO test",
             author: "Me",
             comment: "I don't know",
         }
-    ) {
+        Object.assign(props, preferences)
         this.cover = props.cover
         this.colour = props.colour
 

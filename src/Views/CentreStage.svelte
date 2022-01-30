@@ -9,8 +9,8 @@
     let anchor: HTMLElement
     export let spotlightLevers: { [index: string]: number } = {
         x: 0,
-        y: 3.6,
-        z: 4,
+        y: 1.6,
+        z: 3,
     }
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -22,9 +22,12 @@
     camera.far = 2000
     const regulatedTranslation = 100
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0xffffff, 20, 800)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55)
-    const Spotlight = new THREE.SpotLight(0xffffff, 0.5)
+    scene.fog = new THREE.Fog(0xffffff, 20, 1000)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65)
+    const Spotlight = new THREE.SpotLight(0xffffff, 0.15)
+    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
+    DirectionalLight.position.set(10, 0, 50)
+    DirectionalLight.rotateY(Math.PI / 3)
     Spotlight.translateOnAxis(
         new THREE.Vector3(
             spotlightLevers.x,
@@ -40,6 +43,8 @@
     Spotlight.shadow.mapSize.height = 2048
     Spotlight.shadow.camera.near = 0.5
     Spotlight.shadow.camera.far = 5000
+    Spotlight.shadow.camera.fov = 60
+    Spotlight.angle = Math.PI / 4
 
     const wallMaterial = new THREE.MeshStandardMaterial({
         metalness: 0,
@@ -99,6 +104,7 @@
         anchor.appendChild(renderer.domElement)
         scene.add(ambientLight)
         scene.add(Spotlight)
+        scene.add(DirectionalLight)
         if (!clear) {
             scene.add(wallBackMesh)
             scene.add(leftWallMesh)
