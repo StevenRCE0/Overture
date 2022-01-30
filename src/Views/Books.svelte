@@ -1,16 +1,47 @@
 <script lang="ts">
     import CentreStage from "../Views/CentreStage.svelte"
-    import Booklet, {coverLoaded} from "../Stuff/Booklet"
-    const processedBook = Booklet.translateZ(-10)
+    import Booklet from "../Stuff/Booklet"
+    const book = new Booklet()
+    const tape = book.tape
+    const processedBook = book.book
+    tape.translateZ(-50)
     let rotation = 0
+    let scroll = 0
     let stage: CentreStage
-    coverLoaded.then(() => stage.render())
-    $: processedBook.rotateX(rotation * Math.PI / 360 - processedBook.rotation.x)
+    $: tape.translateY(-140 + scroll - tape.position.y)
+    $: processedBook.rotateX(
+        (rotation * Math.PI) / 360 - processedBook.rotation.x
+    )
+    book.coverLoaded.then(() => stage.render())
 </script>
 
 <div
     style="display: block; position: fixed; z-index: 999; bottom: 50px; left: 50px"
 >
-    <input type="range" min="-360" max="360" step="1" bind:value={rotation} on:input={() => {stage.render()}} />
+    <input
+        type="range"
+        min="-360"
+        max="360"
+        step="1"
+        bind:value={rotation}
+        on:input={() => {
+            stage.render()
+        }}
+    />
 </div>
-<CentreStage objects={[processedBook]} bind:this={stage} />
+<div id="BooksStage">
+    <CentreStage objects={[processedBook, tape]} bind:this={stage} />
+</div>
+
+<svelte:window
+    bind:scrollY={scroll}
+    on:scroll={() => {
+        stage.render()
+    }}
+/>
+
+<style>
+    #BooksStage {
+        height: 150vh;
+    }
+</style>

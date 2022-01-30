@@ -16,7 +16,7 @@
     main {
         text-align: center;
         max-width: 240px;
-        min-width: 768px;
+        /* min-width: 768px; */
         margin: 0;
     }
 
