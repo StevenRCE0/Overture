@@ -1,14 +1,16 @@
 <script lang="ts">
     import CentreStage from "../Views/CentreStage.svelte"
     import Booklet from "../Stuff/Booklet"
+import { Vector3 } from "three";
     const book = new Booklet({colour: 0x992323})
     const tape = book.tape
     const processedBook = book.book
-    tape.translateZ(-50)
+    processedBook.translateOnAxis(new Vector3(0, 15, -5), 1)
+    tape.translateZ(-20)
     let rotation = 0
     let scroll = 0
     let stage: CentreStage
-    $: tape.translateY(-180 + scroll - tape.position.y)
+    $: tape.translateY(-10 + scroll - tape.position.y)
     $: processedBook.rotateX(
         ((rotation + (scroll / 8) - 40) * Math.PI) / 360 - processedBook.rotation.x
     )

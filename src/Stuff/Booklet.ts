@@ -73,10 +73,6 @@ class BookLet {
             color: 0xeeeedf,
             roughness: 0.7,
         })
-        const tapePaper = new THREE.MeshStandardMaterial({
-            color: 0xfffef9,
-            roughness: 0.7,
-        })
         const booklet = new THREE.Object3D()
         const coverHeroMesh = new THREE.Mesh(CoverLayerGeometry, heroPrint)
         coverHeroMesh.castShadow = true
@@ -95,7 +91,7 @@ class BookLet {
         this.book = booklet
 
         const tapeDimensions = {
-            width: 120,
+            width: 100,
             height: 300,
             titleMargin: ratioPixels(4),
             titleSize: ratioPixels(8),
@@ -135,6 +131,7 @@ class BookLet {
             tapeDimensions.height,
             1
         )
+        tapeGeometry.translate(0, -tapeDimensions.height / 2, 0)
         const tapeMesh = new THREE.Mesh(
             tapeGeometry,
             new THREE.MeshStandardMaterial({
