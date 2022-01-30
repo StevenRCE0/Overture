@@ -24,7 +24,14 @@
     const scene = new THREE.Scene()
     scene.fog = new THREE.Fog(0xffffff, 20, 1000)
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.65)
-    const Spotlight = new THREE.SpotLight(0xffffff, 0.15, 0, Math.PI / 4, 0.1, 4)
+    const Spotlight = new THREE.SpotLight(
+        0xffffff,
+        0.15,
+        0,
+        Math.PI / 4,
+        0.1,
+        4
+    )
     const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
     DirectionalLight.position.set(10, 0, 50)
     DirectionalLight.rotateY(Math.PI / 3)
