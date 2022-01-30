@@ -10,7 +10,8 @@ import { Vector3 } from "three";
     let rotation = 0
     let scroll = 0
     let stage: CentreStage
-    $: tape.translateY(-10 + scroll - tape.position.y)
+    $: properScroll = scroll / 1.6
+    $: tape.translateY(-10 + properScroll - tape.position.y)
     $: processedBook.rotateX(
         ((rotation + (scroll / 8) - 40) * Math.PI) / 360 - processedBook.rotation.x
     )
