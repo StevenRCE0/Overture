@@ -67,6 +67,7 @@
     })
 </script>
 
+<title>Bookshelf</title>
 <div
     id="BooksStage"
     use:watchResize={() => {
