@@ -1,11 +1,21 @@
 <script lang="ts">
     import * as THREE from "three"
-    import { onMount } from "svelte"
+    import { onMount, onDestroy } from "svelte"
     import { watchResize } from "svelte-watch-resize"
 
     export let objects: THREE.Object3D[] = []
     export let clear = false
     export let resizeHandled = false
+
+    let night = window.matchMedia("(prefers-color-scheme: dark)").matches
+    const changeAppearance = () => {
+        night = window.matchMedia("(prefers-color-scheme: dark)").matches
+        tuneLight()
+        deepRender()
+    }
+    window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", changeAppearance)
 
     let anchor: HTMLElement
     let innerWidth: number
@@ -23,39 +33,49 @@
     camera.fov = 60
     camera.near = 1
     camera.far = 2000
-    
+
     const regulatedTranslation = 100
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0xffffff, 20, 1000)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65)
-    const Spotlight = new THREE.SpotLight(
-        0xffffff,
-        0.15,
-        0,
-        Math.PI / 4,
-        0.1,
-        4
-    )
 
-    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
-    DirectionalLight.position.set(10, 0, 50)
-    DirectionalLight.rotateY(Math.PI / 3)
-    Spotlight.translateOnAxis(
-        new THREE.Vector3(
-            spotlightLevers.x,
-            spotlightLevers.y,
-            spotlightLevers.z
-        ),
-        20
-    )
+    let ambientLight: THREE.AmbientLight
+    let Spotlight: THREE.SpotLight
+    let directionalLight: THREE.DirectionalLight
 
-    Spotlight.castShadow = true
-    Spotlight.shadow.radius = 8
-    Spotlight.shadow.mapSize.width = 2048
-    Spotlight.shadow.mapSize.height = 2048
-    Spotlight.shadow.camera.near = 0.5
-    Spotlight.shadow.camera.far = 5000
-    Spotlight.angle = Math.PI / 4
+    function tuneLight() {
+        spotlightLevers.y = night ? 0.2 : 0.6
+        scene.fog = night
+            ? new THREE.Fog(0x000000, 20, 1000)
+            : new THREE.Fog(0xffffff, 20, 1000)
+        ambientLight = new THREE.AmbientLight(0xffffff, night ? 0.1 : 0.65)
+        Spotlight = new THREE.SpotLight(
+            0xffffff,
+            night ? 0.5 : 0.15,
+            0,
+            Math.PI / (night ? 8 : 4),
+            0.1,
+            4
+        )
+        Spotlight.translateOnAxis(
+            new THREE.Vector3(
+                spotlightLevers.x,
+                spotlightLevers.y,
+                spotlightLevers.z
+            ),
+            20
+        )
+        directionalLight = new THREE.DirectionalLight(0xffffff, night ? 0 : 0.2)
+        directionalLight.position.set(10, 0, 50)
+        directionalLight.rotateY(Math.PI / 3)
+
+        Spotlight.castShadow = true
+        Spotlight.shadow.radius = 8
+        Spotlight.shadow.mapSize.width = 2048
+        Spotlight.shadow.mapSize.height = 2048
+        Spotlight.shadow.camera.near = 0.5
+        Spotlight.shadow.camera.far = 5000
+        Spotlight.angle = Math.PI / 4
+    }
+    tuneLight()
 
     const wallMaterial = new THREE.MeshStandardMaterial({
         metalness: 0,
@@ -76,10 +96,7 @@
     let rightWallMesh: THREE.Mesh
 
     function assignSizes() {
-        wallBack = new THREE.PlaneGeometry(
-            innerWidth,
-            innerHeight / 1.5
-        )
+        wallBack = new THREE.PlaneGeometry(innerWidth, innerHeight / 1.5)
         floor = new THREE.PlaneGeometry(innerWidth, innerHeight)
         ceiling = floor.clone()
         leftWall = wallBack.clone()
@@ -117,7 +134,7 @@
     function mountSet() {
         scene.add(ambientLight)
         scene.add(Spotlight)
-        scene.add(DirectionalLight)
+        scene.add(directionalLight)
         if (!clear) {
             scene.add(wallBackMesh)
             scene.add(leftWallMesh)
@@ -153,10 +170,21 @@
         mountSet()
         render()
     })
+
+    onDestroy(() => {
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .removeEventListener("change", changeAppearance)
+    })
 </script>
 
-<main bind:this={anchor} use:watchResize={() => {resizeHandled || deepRender()}} />
-<svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight} />
+<main
+    bind:this={anchor}
+    use:watchResize={() => {
+        resizeHandled || deepRender()
+    }}
+/>
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <style>
     main {
