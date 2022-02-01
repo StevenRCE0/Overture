@@ -2,12 +2,8 @@
     import { Router } from "svelte-router-spa"
     import { routes } from "./routes"
 
-    export let name
 </script>
 
-<title>
-    {name}
-</title>
 <main>
     <Router {routes} />
 </main>
