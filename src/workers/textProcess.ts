@@ -71,7 +71,6 @@ export function wrapText(
         }
     }
     context.fillText(line, x, y)
-    console.log("lineCount", lineCount)
 
     return lineCount
 }

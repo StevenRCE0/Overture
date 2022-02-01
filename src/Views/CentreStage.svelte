@@ -5,8 +5,11 @@
 
     export let objects: THREE.Object3D[] = []
     export let clear = false
+    export let resizeHandled = false
 
     let anchor: HTMLElement
+    let innerWidth: number
+    let innerHeight: number
     export let spotlightLevers: { [index: string]: number } = {
         x: 0,
         y: 0.6,
@@ -74,10 +77,10 @@
 
     function assignSizes() {
         wallBack = new THREE.PlaneGeometry(
-            window.innerWidth,
-            window.innerHeight / 1.5
+            innerWidth,
+            innerHeight / 1.5
         )
-        floor = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight)
+        floor = new THREE.PlaneGeometry(innerWidth, innerHeight)
         ceiling = floor.clone()
         leftWall = wallBack.clone()
         rightWall = wallBack.clone()
@@ -86,15 +89,15 @@
         rightWall.rotateY(-Math.PI / 2)
         floor.rotateX(-Math.PI / 2)
         ceiling.rotateX(Math.PI / 2)
-        leftWall.translate(-window.innerWidth / 3, 0, -regulatedTranslation)
-        rightWall.translate(window.innerWidth / 3, 0, -regulatedTranslation)
-        floor.translate(0, -window.innerHeight / 3, -regulatedTranslation)
-        ceiling.translate(0, window.innerHeight / 3, -regulatedTranslation)
+        leftWall.translate(-innerWidth / 3, 0, -regulatedTranslation)
+        rightWall.translate(innerWidth / 3, 0, -regulatedTranslation)
+        floor.translate(0, -innerHeight / 3, -regulatedTranslation)
+        ceiling.translate(0, innerHeight / 3, -regulatedTranslation)
         wallBack.translate(
             0,
             0,
             -Math.min(
-                Math.min(window.innerHeight, window.innerWidth) / 2,
+                Math.min(innerHeight, innerWidth) / 2,
                 camera.far - regulatedTranslation
             )
         )
@@ -128,8 +131,8 @@
     }
 
     export function render() {
-        camera.aspect = window.innerWidth / window.innerHeight
-        renderer.setSize(window.innerWidth, window.innerHeight)
+        camera.aspect = innerWidth / innerHeight
+        renderer.setSize(innerWidth, innerHeight)
         renderer.setPixelRatio(window.devicePixelRatio)
         camera.updateProjectionMatrix()
 
@@ -137,7 +140,7 @@
         renderer.render(scene, camera)
     }
 
-    function handleResize(node: HTMLElement) {
+    export function deepRender() {
         scene.clear()
         assignSizes()
         mountSet()
@@ -152,7 +155,8 @@
     })
 </script>
 
-<main bind:this={anchor} use:watchResize={handleResize} />
+<main bind:this={anchor} use:watchResize={() => {resizeHandled || deepRender()}} />
+<svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight} />
 
 <style>
     main {
