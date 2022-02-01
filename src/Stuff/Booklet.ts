@@ -12,7 +12,7 @@ export interface BookletProps {
     comment?: string
 }
 
-function ratioPixels(given: number): number {
+export function ratioPixels(given: number): number {
     return given * window.devicePixelRatio * 5
 }
 
