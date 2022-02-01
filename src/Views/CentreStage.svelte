@@ -20,6 +20,7 @@
     camera.fov = 60
     camera.near = 1
     camera.far = 2000
+    
     const regulatedTranslation = 100
     const scene = new THREE.Scene()
     scene.fog = new THREE.Fog(0xffffff, 20, 1000)
@@ -32,6 +33,7 @@
         0.1,
         4
     )
+
     const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
     DirectionalLight.position.set(10, 0, 50)
     DirectionalLight.rotateY(Math.PI / 3)
@@ -43,6 +45,7 @@
         ),
         20
     )
+
     Spotlight.castShadow = true
     Spotlight.shadow.radius = 8
     Spotlight.shadow.mapSize.width = 2048
@@ -56,57 +59,59 @@
         roughness: 0.6,
         color: 0xe3e3e3,
     })
-    const wallBack = new THREE.PlaneGeometry(
-        window.innerWidth,
-        window.innerHeight / 1.5
-    )
-    const floor = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight)
-    const ceiling = floor.clone()
-    const leftWall = wallBack.clone()
-    const rightWall = wallBack.clone()
-    leftWall.rotateY(Math.PI / 2)
-    rightWall.rotateY(-Math.PI / 2)
-    floor.rotateX(-Math.PI / 2)
-    ceiling.rotateX(Math.PI / 2)
-    leftWall.translate(-window.innerWidth / 3, 0, -regulatedTranslation)
-    rightWall.translate(window.innerWidth / 3, 0, -regulatedTranslation)
-    floor.translate(0, -window.innerHeight / 3, -regulatedTranslation)
-    ceiling.translate(0, window.innerHeight / 3, -regulatedTranslation)
-    wallBack.translate(
-        0,
-        0,
-        -Math.min(
-            Math.min(window.innerHeight, window.innerWidth) / 2,
-            camera.far - regulatedTranslation
+
+    let wallBack: THREE.BufferGeometry
+    let floor: THREE.BufferGeometry
+    let ceiling: THREE.BufferGeometry
+    let leftWall: THREE.BufferGeometry
+    let rightWall: THREE.BufferGeometry
+
+    let wallBackMesh: THREE.Mesh
+    let floorMesh: THREE.Mesh
+    let ceilingMesh: THREE.Mesh
+    let leftWallMesh: THREE.Mesh
+    let rightWallMesh: THREE.Mesh
+
+    function assignSizes() {
+        wallBack = new THREE.PlaneGeometry(
+            window.innerWidth,
+            window.innerHeight / 1.5
         )
-    )
-    const wallBackMesh = new THREE.Mesh(wallBack, wallMaterial)
-    wallBackMesh.receiveShadow = true
-    const leftWallMesh = new THREE.Mesh(leftWall, wallMaterial)
-    leftWallMesh.receiveShadow = true
-    const rightWallMesh = new THREE.Mesh(rightWall, wallMaterial)
-    rightWallMesh.receiveShadow = true
-    const floorMesh = new THREE.Mesh(floor, wallMaterial)
-    floorMesh.receiveShadow = true
-    const ceilingMesh = new THREE.Mesh(ceiling, wallMaterial)
-    ceilingMesh.receiveShadow = true
+        floor = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight)
+        ceiling = floor.clone()
+        leftWall = wallBack.clone()
+        rightWall = wallBack.clone()
 
-    export function render() {
-        camera.aspect = window.innerWidth / window.innerHeight
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        renderer.setPixelRatio(window.devicePixelRatio)
-        camera.updateProjectionMatrix()
+        leftWall.rotateY(Math.PI / 2)
+        rightWall.rotateY(-Math.PI / 2)
+        floor.rotateX(-Math.PI / 2)
+        ceiling.rotateX(Math.PI / 2)
+        leftWall.translate(-window.innerWidth / 3, 0, -regulatedTranslation)
+        rightWall.translate(window.innerWidth / 3, 0, -regulatedTranslation)
+        floor.translate(0, -window.innerHeight / 3, -regulatedTranslation)
+        ceiling.translate(0, window.innerHeight / 3, -regulatedTranslation)
+        wallBack.translate(
+            0,
+            0,
+            -Math.min(
+                Math.min(window.innerHeight, window.innerWidth) / 2,
+                camera.far - regulatedTranslation
+            )
+        )
 
-        scene.autoUpdate = true
-        renderer.render(scene, camera)
+        wallBackMesh = new THREE.Mesh(wallBack, wallMaterial)
+        wallBackMesh.receiveShadow = true
+        floorMesh = new THREE.Mesh(floor, wallMaterial)
+        floorMesh.receiveShadow = true
+        ceilingMesh = new THREE.Mesh(ceiling, wallMaterial)
+        ceilingMesh.receiveShadow = true
+        leftWallMesh = new THREE.Mesh(leftWall, wallMaterial)
+        leftWallMesh.receiveShadow = true
+        rightWallMesh = new THREE.Mesh(rightWall, wallMaterial)
+        rightWallMesh.receiveShadow = true
     }
 
-    function handleResize(node: HTMLElement) {
-        render()
-    }
-
-    onMount(() => {
-        anchor.appendChild(renderer.domElement)
+    function mountSet() {
         scene.add(ambientLight)
         scene.add(Spotlight)
         scene.add(DirectionalLight)
@@ -120,6 +125,29 @@
         for (const object of objects) {
             scene.add(object)
         }
+    }
+
+    export function render() {
+        camera.aspect = window.innerWidth / window.innerHeight
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        renderer.setPixelRatio(window.devicePixelRatio)
+        camera.updateProjectionMatrix()
+
+        scene.autoUpdate = true
+        renderer.render(scene, camera)
+    }
+
+    function handleResize(node: HTMLElement) {
+        scene.clear()
+        assignSizes()
+        mountSet()
+        render()
+    }
+
+    onMount(() => {
+        anchor.appendChild(renderer.domElement)
+        assignSizes()
+        mountSet()
         render()
     })
 </script>
