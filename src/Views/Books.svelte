@@ -1,49 +1,67 @@
 <script lang="ts">
     import CentreStage from "../Views/CentreStage.svelte"
     import Booklet from "../Stuff/Booklet"
-    import { Matrix4, Vector3, Vector4 } from "three"
+    import { fetchBook } from "../workers/gistParser"
+    import { ConeBufferGeometry, Vector3 } from "three"
     import { watchResize } from "svelte-watch-resize"
+    import { onMount } from "svelte"
 
-    const bookInformation = {
-        cover: "/sf/why.jpg",
-        colour: 0x992323,
-        title: "I Love yuu",
-    }
-    let book = new Booklet(bookInformation)
-    let tape = book.printTape()
-    const processedBook = book.book
-    processedBook.translateOnAxis(new Vector3(0, 15, -5), 1)
-    tape.translateZ(-20)
+    let bookShelf = new Array<Booklet>()
+    let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
     let rotation = 0
     let scroll = 0
     let stage: CentreStage
-    $: properScroll = scroll / 1.6
-    $: tape.translateY(-10 + properScroll - tape.position.y)
-    $: processedBook.rotateX(
+
+    let currentBook: Booklet
+
+    $: currentBook?.tape.translateY(
+        -10 + scroll / 1.6 - currentBook.tape.position.y
+    )
+    $: currentBook?.book.rotateX(
         ((rotation + scroll / 8 - 40) * Math.PI) / 360 -
-            processedBook.rotation.x
+            currentBook.book.rotation.x
     )
-    $: processedBook.translateY(
-        -Math.max((-scroll / 3) - 5, -window.innerHeight / 20 + 3) -
-            processedBook.position.y
+    $: currentBook?.book.translateY(
+        -Math.max(-scroll / 3 - 5, -window.innerHeight / 20 + 3) -
+            currentBook.book.position.y
     )
-    $: processedBook.scale.x = processedBook.scale.y = processedBook.scale.z = Math.max(1 - scroll / (window.innerHeight / 4), 0.5)
-    book.coverLoaded.then(() => stage.render())
+    $: currentBook
+        ?.printTape()
+        .translateY(
+            -Math.max(-scroll / 3 - 5, -window.innerHeight / 20 + 3) -
+                currentBook.book.position.y
+        )
+    $: currentBook &&
+        (currentBook.book.scale.x =
+            currentBook.book.scale.y =
+            currentBook.book.scale.z =
+                Math.max(1 - scroll / (window.innerHeight / 4), 0.5))
+
+    onMount(() => {
+        fetchBook("/gist/StevenRCE0/a68460422937f182bc591788fa30e930/raw").then(
+            (books) => {
+                books.map((bookInformation) => {
+                    const newBook = new Booklet(bookInformation)
+                    bookShelf = [...bookShelf, newBook]
+                    itemBuffer = [...itemBuffer, newBook.book, newBook.tape]
+                    newBook.book.translateOnAxis(new Vector3(0, 15, -5), 1)
+                    newBook.tape.translateZ(-20)
+                    newBook.coverLoaded.then(() => stage.deepRender())
+                })
+                currentBook = bookShelf[0]
+            }
+        )
+    })
 </script>
 
 <div
     id="BooksStage"
     use:watchResize={() => {
-        book.resize()
-        // tape = book.printTape()
+        // book.resize()
         stage.deepRender()
     }}
 >
-    <CentreStage
-        objects={[processedBook, tape]}
-        bind:this={stage}
-        resizeHandled
-    />
+    <CentreStage objects={itemBuffer} bind:this={stage} resizeHandled />
 </div>
 
 <svelte:window

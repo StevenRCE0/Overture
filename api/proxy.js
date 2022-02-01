@@ -8,6 +8,9 @@ module.exports = (req, res) => {
     if (req.url.startsWith("/sf")) {
         target = "https://c.rcex.live:8/"
     }
+    if (req.url.startsWith("/gist")) {
+        target = "https://gist.githubusercontent.com/"
+    }
 
     // 创建代理对象并转发请求
     createProxyMiddleware({
@@ -15,6 +18,7 @@ module.exports = (req, res) => {
         changeOrigin: true,
         pathRewrite: {
             "^/api": "",
+            "/gist": "",
         },
     })(req, res)
 }

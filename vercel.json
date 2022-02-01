@@ -3,6 +3,10 @@
     {
       "source": "/sf/(.*)",
       "destination": "/api/proxy"
+    },
+    {
+      "source": "/gist/(.*)",
+      "destination": "/api/proxy"
     }
   ]
 }

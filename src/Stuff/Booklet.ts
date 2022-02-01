@@ -1,14 +1,17 @@
 import * as THREE from "three"
+import { fetchBook } from "../workers/gistParser"
 import { multiLineTitle, toTitleCase, wrapText } from "../workers/textProcess"
 
 // Use 360 * 566 for the size of the cover image
-interface BookletProps {
+export interface BookletProps {
+    url?: string
     cover?: string
     colour?: THREE.ColorRepresentation
     title?: string
     author?: string
     comment?: string
 }
+
 function ratioPixels(given: number): number {
     return given * window.devicePixelRatio * 5
 }
@@ -17,6 +20,7 @@ class BookLet {
     preferences: BookletProps
     loaded = false
     book: THREE.Object3D
+    tape: THREE.Object3D
     coverLoaded = new Promise((resolve) => {
         setInterval(() => {
             if (this.loaded) {
@@ -47,7 +51,6 @@ class BookLet {
     }
 
     printTape = () => {
-        console.log("printing tape")
         const tapeText = document.createElement("canvas")
         const glyphs = tapeText.getContext("2d")
         let writerOffset = ratioPixels(38)
@@ -85,8 +88,9 @@ class BookLet {
                 ratioPixels(this.tapeDimensions.width) -
                     this.tapeDimensions.margin * 2,
                 this.tapeDimensions.authorLineHeight
-            ) * this.tapeDimensions.authorLineHeight + ratioPixels(3)
-
+            ) *
+                this.tapeDimensions.authorLineHeight +
+            ratioPixels(3)
 
         // Printing Comment
         glyphs.font = `normal ${this.tapeDimensions.commentSize}pt 'Times New Roman'`
@@ -128,13 +132,17 @@ class BookLet {
     constructor(preferences: BookletProps) {
         let presetProps = {
             cover: "/sf/why.jpg",
-            colour: "0xe3e3e3",
+            colour: 0xe3e3e3,
             title: "Tape title TO test",
             author: "Me",
             comment:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra. Orci eu lobortis elementum nibh tellus molestie. Vulputate dignissim suspendisse in est. Vel pharetra vel turpis nunc. Malesuada nunc vel risus commodo. Nisi vitae suscipit tellus mauris. Posuere morbi leo urna molestie at elementum eu. Urna duis convallis convallis tellus. Urna molestie at elementum eu. Nunc sed blandit libero volutpat.",
         }
-        this.preferences = Object.assign(presetProps, preferences)
+        if (preferences.url) {
+            fetchBook(preferences.url).then(info => Object.assign(presetProps, info))
+        } else {
+            this.preferences = Object.assign(presetProps, preferences)
+        }
 
         const heroPrint = new THREE.MeshPhongMaterial({
             map: new THREE.TextureLoader().load(
@@ -188,7 +196,7 @@ class BookLet {
             booklet.add(mesh)
         }
         this.book = booklet
-
+        this.tape = this.printTape()
     }
 }
 
