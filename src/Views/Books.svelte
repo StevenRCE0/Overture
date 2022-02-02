@@ -63,14 +63,14 @@
 
     function handleScroll(index: number) {
         bookShelf[index].tape.translateY(
-            -10 + scrollers[index] / 3 - bookShelf[index].tape.position.y
+            scrollers[index] / 3 - bookShelf[index].tape.position.y
         )
         bookShelf[index].book.rotateX(
             ((scrollers[index] / 8 - 40) * Math.PI) / 360 -
                 bookShelf[index].book.rotation.x
         )
         bookShelf[index].book.translateY(
-            -Math.max(-scrollers[index] / 3.5 - 5, -50) -
+            -Math.min(-scrollers[index] / 3.5 - 5, -15) -
                 bookShelf[index].book.position.y
         )
         bookShelf[index].book.scale.x =
@@ -103,7 +103,8 @@
                     newBook.book.rotateX(
                         (-40 * Math.PI) / 360 - newBook.book.rotation.x
                     )
-                    newBook.book.translateOnAxis(new Vector3(0, 15, -5), 1)
+                    newBook.book.translateY(15)
+                    newBook.book.translateZ(-5)
                     newBook.tape.translateZ(-20)
                     figure.digitCurrent.translateX(
                         bookIndex * innerWidth * Spacer
