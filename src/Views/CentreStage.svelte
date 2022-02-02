@@ -26,7 +26,7 @@
         z: 3,
     }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.shadowMap.enabled = true
     const camera = new THREE.PerspectiveCamera()
     camera.translateOnAxis(new THREE.Vector3(0, 0, 1), 100)

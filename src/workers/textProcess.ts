@@ -10,6 +10,10 @@ const prepList = [
     "on",
 ]
 
+function isChinese(str: string) {
+    return /[\u4E00-\u9FA5]/.test(str)
+}
+
 export function toTitleCase(text: string) {
     const characters = text.split(" ").map((word, wordIndex) => {
         if (wordIndex !== 0 && prepList.indexOf(word.toLowerCase()) >= 0) {
@@ -53,17 +57,18 @@ export function wrapText(
     maxWidth: number,
     lineHeight: number
 ) {
-    var words = text.split(" ")
+    const Chinese = isChinese(text)
+    var words = Chinese ? text.split("") : text.split(" ")
     var line = ""
     var lineCount = 1
 
     for (var n = 0; n < words.length; n++) {
-        var testLine = line + words[n] + " "
+        var testLine = line + words[n] + (Chinese ? "" : " ")
         var metrics = context.measureText(testLine)
         var testWidth = metrics.width
         if (testWidth > maxWidth && n > 0) {
             context.fillText(line, x, y)
-            line = words[n] + " "
+            line = words[n] + (Chinese ? "" : " ")
             y += lineHeight
             lineCount += 1
         } else {

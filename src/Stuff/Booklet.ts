@@ -21,6 +21,7 @@ class BookLet {
     loaded = false
     book: THREE.Object3D
     tape: THREE.Object3D
+    tapeFont = "'Times New Roman', 'Noto Serif SC', Times, serif"
     coverLoaded = new Promise((resolve) => {
         setInterval(() => {
             if (this.loaded) {
@@ -30,7 +31,7 @@ class BookLet {
     })
 
     tapeDimensions = {
-        width: Math.min(100, window.innerWidth / 6),
+        width: Math.min(100, window.innerWidth / 5),
         height: 500,
         margin: ratioPixels(8),
         titleSize: ratioPixels(8),
@@ -43,9 +44,9 @@ class BookLet {
 
     resize = () => {
         if (
-            Math.min(100, window.innerWidth / 6) !== this.tapeDimensions.width
+            Math.min(100, window.innerWidth / 5) !== this.tapeDimensions.width
         ) {
-            this.tapeDimensions.width = Math.min(100, window.innerWidth / 6)
+            this.tapeDimensions.width = Math.min(100, window.innerWidth / 5)
             this.printTape()
         }
     }
@@ -61,7 +62,7 @@ class BookLet {
         glyphs.fillRect(0, 0, tapeText.width, tapeText.height)
 
         // Printing Title
-        glyphs.font = `bold ${this.tapeDimensions.titleSize}pt 'Times New Roman'`
+        glyphs.font = `bold ${this.tapeDimensions.titleSize}pt ${this.tapeFont}`
         glyphs.fillStyle = "black"
         glyphs.textAlign = "center"
         writerOffset +=
@@ -76,7 +77,7 @@ class BookLet {
             ) * this.tapeDimensions.titleLineHeight
 
         // Printing Author
-        glyphs.font = `${this.tapeDimensions.authorSize}pt 'Times New Roman'`
+        glyphs.font = `${this.tapeDimensions.authorSize}pt ${this.tapeFont}`
         glyphs.fillStyle = "#666"
         glyphs.textAlign = "center"
         writerOffset +=
@@ -93,7 +94,7 @@ class BookLet {
             ratioPixels(3)
 
         // Printing Comment
-        glyphs.font = `normal ${this.tapeDimensions.commentSize}pt 'Times New Roman'`
+        glyphs.font = `normal ${this.tapeDimensions.commentSize}pt ${this.tapeFont}`
         glyphs.fillStyle = "black"
         glyphs.textAlign = "left"
         writerOffset +=
@@ -139,7 +140,9 @@ class BookLet {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra. Orci eu lobortis elementum nibh tellus molestie. Vulputate dignissim suspendisse in est. Vel pharetra vel turpis nunc. Malesuada nunc vel risus commodo. Nisi vitae suscipit tellus mauris. Posuere morbi leo urna molestie at elementum eu. Urna duis convallis convallis tellus. Urna molestie at elementum eu. Nunc sed blandit libero volutpat.",
         }
         if (preferences.url) {
-            fetchBook(preferences.url).then(info => Object.assign(presetProps, info))
+            fetchBook(preferences.url).then((info) =>
+                Object.assign(presetProps, info)
+            )
         } else {
             this.preferences = Object.assign(presetProps, preferences)
         }

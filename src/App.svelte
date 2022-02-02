@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Router } from "svelte-router-spa"
     import { routes } from "./routes"
-
 </script>
 
 <main>
@@ -15,7 +14,6 @@
         /* min-width: 768px; */
         margin: 0;
     }
-
     @media (min-width: 640px) {
         main {
             max-width: none;

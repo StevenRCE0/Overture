@@ -11,6 +11,7 @@
     import "swiper/css"
     import Counter from "../Stuff/Counter"
     import { cubicInOut } from "svelte/easing"
+    import "../../public/sourceFont.css"
 
     let bookShelf = new Array<Booklet>()
     let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
@@ -18,6 +19,7 @@
     let scrollers: number[] = []
     let scrollingBlocks: HTMLElement[] = []
     let stage: CentreStage
+    let index: number
     const fineOffset = tweened(0, {
         duration: 4000,
         easing: cubicInOut,
@@ -68,7 +70,7 @@
                 bookShelf[index].book.rotation.x
         )
         bookShelf[index].book.translateY(
-            -Math.max(-scrollers[index] / 3.5 - 5, -innerHeight / 20 + 5) -
+            -Math.max(-scrollers[index] / 3.5 - 5, -50) -
                 bookShelf[index].book.position.y
         )
         bookShelf[index].book.scale.x =
@@ -112,17 +114,18 @@
                     figure.outOf.translateX(bookIndex * innerWidth * Spacer)
 
                     figure.digitCurrent.translateX(-innerWidth / 15)
-                    figure.digitCurrent.translateY(innerHeight / 15)
+                    figure.digitCurrent.translateY(75)
                     figure.digitCurrent.translateZ(-75)
                     figure.digitTotal.translateX(innerWidth / 15)
-                    figure.digitTotal.translateY(innerHeight / 15)
+                    figure.digitTotal.translateY(75)
                     figure.digitTotal.translateZ(-75)
-                    figure.outOf.translateY(innerHeight / 12)
+                    figure.outOf.translateY(90)
                     figure.outOf.translateZ(-115)
                     newBook.book.translateX(bookIndex * innerWidth * Spacer)
                     newBook.tape.translateX(bookIndex * innerWidth * Spacer)
                     newBook.coverLoaded.then(() => stage.deepRender())
                 })
+                stage?.render()
             }
         )
     })
@@ -149,8 +152,8 @@
     modules={[Mousewheel, Keyboard]}
     style="width: 100vw;"
     on:slideChange={(e) => {
-        console.log(e.detail[0][0].activeIndex)
         fineOffset.set(e.detail[0][0].activeIndex)
+        index = e.detail[0][0].activeIndex
     }}
 >
     {#each bookShelf as book, i}
