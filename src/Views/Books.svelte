@@ -5,19 +5,26 @@
     import { Vector3 } from "three"
     import { watchResize } from "svelte-watch-resize"
     import { onDestroy, onMount } from "svelte"
+    import { tweened } from "svelte/motion"
     import { Swiper, SwiperSlide } from "swiper/svelte"
     import { Mousewheel, Keyboard } from "swiper"
     import "swiper/css"
     import Counter from "../Stuff/Counter"
-import { xlink_attr } from "svelte/internal";
+    import { cubicInOut } from "svelte/easing"
 
     let bookShelf = new Array<Booklet>()
     let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
     let counterBuffer: THREE.Object3D<THREE.Event>[] = []
     let scrollers: number[] = []
     let scrollingBlocks: HTMLElement[] = []
-    let previousScrollingState: number
     let stage: CentreStage
+    const fineOffset = tweened(0, {
+        duration: 4000,
+        easing: cubicInOut,
+    })
+    fineOffset.subscribe((value) => {
+        handleSwitch(value)
+    })
     const Spacer = 1 / 2
 
     let figure: Counter
@@ -25,44 +32,31 @@ import { xlink_attr } from "svelte/internal";
     $: innerWidth = window.innerWidth
     $: innerHeight = window.innerHeight
 
-    $: outtaScale = counterBuffer.filter((x, i) => i % 3 === 1).map((entry, index) => Math.max(
-        0,
-        1 - scrollers[index] / (innerHeight / 20)
-    ))
-
-    function handleSwitch() {
-        const value = scrollingBlocks.map(
-            (entry) => entry.getBoundingClientRect().left / innerWidth
+    $: outtaScale = counterBuffer
+        .filter((x, i) => i % 3 === 1)
+        .map((entry, index) =>
+            Math.max(0, 1 - scrollers[index] / (innerHeight / 20))
         )
 
-        if (
-            !scrollingBlocks[0] ||
-            previousScrollingState === value[0] ||
-            Math.abs(previousScrollingState - value[0]) > 0.5
-        )
-            return
-
-        previousScrollingState = value[0]
-        console.log(value)
-
+    function handleSwitch(number: number) {
         bookShelf.map((book, index) => {
             book.book.translateX(
-                value[index] * window.innerWidth * Spacer - book.book.position.x
+                -(number - index) * innerWidth * Spacer - book.book.position.x
             )
             book.tape.translateX(
-                value[index] * window.innerWidth * Spacer - book.tape.position.x
+                -(number - index) * innerWidth * Spacer - book.tape.position.x
             )
             counterBuffer
                 .slice(index * 3, index * 3 + 3)
                 .map((entry, entryIndex) =>
                     entry.translateX(
-                        value[index] * window.innerWidth * Spacer +
+                        -(number - index) * innerWidth * Spacer +
                             ((entryIndex - 1) * innerWidth) / 15 -
                             entry.position.x
                     )
                 )
         })
-        stage.render()
+        stage?.render()
     }
 
     function handleScroll(index: number) {
@@ -82,19 +76,11 @@ import { xlink_attr } from "svelte/internal";
             bookShelf[index].book.scale.z =
                 Math.max(1 - scrollers[index] / (innerHeight / 3.5), 0.5)
 
-        counterBuffer.filter((x, i) => i % 3 === 1)[index].scale.set(outtaScale[index], outtaScale[index], 1)
-        stage.render()
-    }
+        counterBuffer
+            .filter((x, i) => i % 3 === 1)
+            [index].scale.set(outtaScale[index], outtaScale[index], 1)
 
-    let interval: NodeJS.Timer
-    function handleLoop(flick: Boolean) {
-        if (!flick) {
-            clearInterval(interval)
-            return
-        }
-        interval = setInterval(() => {
-            handleSwitch()
-        }, 1000 / 60)
+        stage?.render()
     }
 
     onMount(() => {
@@ -137,12 +123,8 @@ import { xlink_attr } from "svelte/internal";
                     newBook.tape.translateX(bookIndex * innerWidth * Spacer)
                     newBook.coverLoaded.then(() => stage.deepRender())
                 })
-                handleLoop(true)
             }
         )
-    })
-    onDestroy(() => {
-        clearInterval(interval)
     })
 </script>
 
@@ -156,7 +138,6 @@ import { xlink_attr } from "svelte/internal";
     <CentreStage
         objects={[...itemBuffer, ...counterBuffer]}
         bind:this={stage}
-        resizeHandled
     />
 </div>
 <Swiper
@@ -167,11 +148,16 @@ import { xlink_attr } from "svelte/internal";
     keyboard={{ enabled: true }}
     modules={[Mousewheel, Keyboard]}
     style="width: 100vw;"
+    on:slideChange={(e) => {
+        console.log(e.detail[0][0].activeIndex)
+        fineOffset.set(e.detail[0][0].activeIndex)
+    }}
 >
     {#each bookShelf as book, i}
         <SwiperSlide>
             <div
-                style="height: 100vh; overflow-y: scroll;"
+                class="tall"
+                id={`book-${i}`}
                 bind:this={scrollingBlocks[i]}
                 on:scroll={(e) => {
                     // @ts-ignore
@@ -184,3 +170,15 @@ import { xlink_attr } from "svelte/internal";
         </SwiperSlide>
     {/each}
 </Swiper>
+
+<style>
+    .tall {
+        height: 100vh;
+        overflow-y: scroll;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+    .tall::-webkit-scrollbar {
+        display: none;
+    }
+</style>
