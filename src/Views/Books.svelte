@@ -9,10 +9,11 @@
     import { Mousewheel, Keyboard } from "swiper"
     import "swiper/css"
     import Counter from "../Stuff/Counter"
+import { xlink_attr } from "svelte/internal";
 
     let bookShelf = new Array<Booklet>()
     let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
-    let counterBuffer: { [index: string]: THREE.Object3D<THREE.Event> }[] = []
+    let counterBuffer: THREE.Object3D<THREE.Event>[] = []
     let scrollers: number[] = []
     let scrollingBlocks: HTMLElement[] = []
     let previousScrollingState: number
@@ -20,24 +21,14 @@
     const Spacer = 1 / 2
 
     let figure: Counter
-    let currentIndex = 0
 
     $: innerWidth = window.innerWidth
     $: innerHeight = window.innerHeight
 
-    $: figure?.digitCurrent.translateX(-innerWidth / 15)
-    $: figure?.digitCurrent.translateY(innerHeight / 15)
-    $: figure?.digitCurrent.translateZ(-75)
-    $: figure?.digitTotal.translateX(innerWidth / 15)
-    $: figure?.digitTotal.translateY(innerHeight / 15)
-    $: figure?.digitTotal.translateZ(-75)
-    $: figure?.outOf.translateY(innerHeight / 12)
-    $: figure?.outOf.translateZ(-115)
-    $: outtaScale = Math.max(
+    $: outtaScale = counterBuffer.filter((x, i) => i % 3 === 1).map((entry, index) => Math.max(
         0,
-        1 - scrollers[currentIndex] / (innerHeight / 20)
-    )
-    $: figure?.outOf.scale.set(outtaScale, outtaScale, 1)
+        1 - scrollers[index] / (innerHeight / 20)
+    ))
 
     function handleSwitch() {
         const value = scrollingBlocks.map(
@@ -61,6 +52,15 @@
             book.tape.translateX(
                 value[index] * window.innerWidth * Spacer - book.tape.position.x
             )
+            counterBuffer
+                .slice(index * 3, index * 3 + 3)
+                .map((entry, entryIndex) =>
+                    entry.translateX(
+                        value[index] * window.innerWidth * Spacer +
+                            ((entryIndex - 1) * innerWidth) / 15 -
+                            entry.position.x
+                    )
+                )
         })
         stage.render()
     }
@@ -81,6 +81,8 @@
             bookShelf[index].book.scale.y =
             bookShelf[index].book.scale.z =
                 Math.max(1 - scrollers[index] / (innerHeight / 3.5), 0.5)
+
+        counterBuffer.filter((x, i) => i % 3 === 1)[index].scale.set(outtaScale[index], outtaScale[index], 1)
         stage.render()
     }
 
@@ -101,22 +103,36 @@
                 books.map((bookInformation, bookIndex) => {
                     const newBook = new Booklet(bookInformation)
                     scrollers.push(0)
-                    figure = new Counter(books.length, currentIndex + 1)
+                    figure = new Counter(books.length, bookIndex + 1)
                     bookShelf = [...bookShelf, newBook]
                     itemBuffer = [...itemBuffer, newBook.book, newBook.tape]
                     counterBuffer = [
                         ...counterBuffer,
-                        {
-                            current: figure.digitCurrent,
-                            total: figure.digitTotal,
-                            outOf: figure.outOf,
-                        },
+                        figure.digitCurrent,
+                        figure.outOf,
+                        figure.digitTotal,
                     ]
                     newBook.book.rotateX(
                         (-40 * Math.PI) / 360 - newBook.book.rotation.x
                     )
                     newBook.book.translateOnAxis(new Vector3(0, 15, -5), 1)
                     newBook.tape.translateZ(-20)
+                    figure.digitCurrent.translateX(
+                        bookIndex * innerWidth * Spacer
+                    )
+                    figure.digitTotal.translateX(
+                        bookIndex * innerWidth * Spacer
+                    )
+                    figure.outOf.translateX(bookIndex * innerWidth * Spacer)
+
+                    figure.digitCurrent.translateX(-innerWidth / 15)
+                    figure.digitCurrent.translateY(innerHeight / 15)
+                    figure.digitCurrent.translateZ(-75)
+                    figure.digitTotal.translateX(innerWidth / 15)
+                    figure.digitTotal.translateY(innerHeight / 15)
+                    figure.digitTotal.translateZ(-75)
+                    figure.outOf.translateY(innerHeight / 12)
+                    figure.outOf.translateZ(-115)
                     newBook.book.translateX(bookIndex * innerWidth * Spacer)
                     newBook.tape.translateX(bookIndex * innerWidth * Spacer)
                     newBook.coverLoaded.then(() => stage.deepRender())
@@ -137,13 +153,17 @@
         stage.deepRender()
     }}
 >
-    <CentreStage objects={[...itemBuffer]} bind:this={stage} resizeHandled />
+    <CentreStage
+        objects={[...itemBuffer, ...counterBuffer]}
+        bind:this={stage}
+        resizeHandled
+    />
 </div>
 <Swiper
     spaceBetween={0}
     slidesPerView={1}
     shortSwipes={true}
-    mousewheel={{ forceToAxis: true, sensitivity: 0.1 }}
+    mousewheel={{ forceToAxis: true, thresholdDelta: 20 }}
     keyboard={{ enabled: true }}
     modules={[Mousewheel, Keyboard]}
     style="width: 100vw;"
