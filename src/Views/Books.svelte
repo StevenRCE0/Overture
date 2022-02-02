@@ -70,7 +70,7 @@
                 bookShelf[index].book.rotation.x
         )
         bookShelf[index].book.translateY(
-            -Math.min(-scrollers[index] / 3.5 - 5, -15) -
+            -Math.min(-scrollers[index] / 3.5 - 5, -12.5) -
                 bookShelf[index].book.position.y
         )
         bookShelf[index].book.scale.x =
