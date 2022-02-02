@@ -21,13 +21,13 @@
     let stage: CentreStage
     let index: number
     const fineOffset = tweened(0, {
-        duration: 4000,
+        duration: 2000,
         easing: cubicInOut,
     })
     fineOffset.subscribe((value) => {
         handleSwitch(value)
     })
-    const Spacer = 1 / 2
+    const Spacer = 1 / 4
 
     let figure: Counter
 
