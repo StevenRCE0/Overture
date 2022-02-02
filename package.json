@@ -34,6 +34,7 @@
         "svelte-canvas": "^0.7.1",
         "svelte-router-spa": "^6.0.3",
         "svelte-watch-resize": "^1.0.3",
+        "swiper": "^8.0.1",
         "three": "^0.137.5"
     },
     "prettier": {
