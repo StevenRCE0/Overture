@@ -57,7 +57,7 @@
                 .map((entry, entryIndex) =>
                     entry.translateX(
                         -(number - index) * innerWidth * Spacer +
-                            (entryIndex - 1) * 45 -
+                            (entryIndex - 1) * 30 -
                             entry.position.x
                     )
                 )
