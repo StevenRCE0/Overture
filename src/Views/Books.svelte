@@ -118,10 +118,10 @@
                     )
                     figure.outOf.translateX(bookIndex * innerWidth * Spacer)
 
-                    figure.digitCurrent.translateX(-45)
+                    figure.digitCurrent.translateX(-30)
                     figure.digitCurrent.translateY(75)
                     figure.digitCurrent.translateZ(-75)
-                    figure.digitTotal.translateX(45)
+                    figure.digitTotal.translateX(30)
                     figure.digitTotal.translateY(75)
                     figure.digitTotal.translateZ(-75)
                     figure.outOf.translateY(90)
