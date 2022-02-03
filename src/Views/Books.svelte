@@ -40,6 +40,10 @@
             Math.max(0, 1 - scrollers[index] / (innerHeight / 20))
         )
 
+    function clamp(value: number, min: number, max: number) {
+        return Math.max(min, Math.min(max, value))
+    }
+
     function handleSwitch(number: number) {
         bookShelf.map((book, index) => {
             book.book.translateX(
@@ -53,7 +57,7 @@
                 .map((entry, entryIndex) =>
                     entry.translateX(
                         -(number - index) * innerWidth * Spacer +
-                            ((entryIndex - 1) * innerWidth) / 15 -
+                            (entryIndex - 1) * 45 -
                             entry.position.x
                     )
                 )
@@ -70,7 +74,7 @@
                 bookShelf[index].book.rotation.x
         )
         bookShelf[index].book.translateY(
-            -Math.min(-scrollers[index] / 3.5 - 5, -12.5) -
+            -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
                 bookShelf[index].book.position.y
         )
         bookShelf[index].book.scale.x =
@@ -114,10 +118,10 @@
                     )
                     figure.outOf.translateX(bookIndex * innerWidth * Spacer)
 
-                    figure.digitCurrent.translateX(-innerWidth / 15)
+                    figure.digitCurrent.translateX(-45)
                     figure.digitCurrent.translateY(75)
                     figure.digitCurrent.translateZ(-75)
-                    figure.digitTotal.translateX(innerWidth / 15)
+                    figure.digitTotal.translateX(45)
                     figure.digitTotal.translateY(75)
                     figure.digitTotal.translateZ(-75)
                     figure.outOf.translateY(90)
@@ -133,49 +137,60 @@
 </script>
 
 <title>Bookshelf</title>
-<div
-    use:watchResize={() => {
-        // book.resize()
-        stage.deepRender()
-    }}
->
-    <CentreStage
-        objects={[...itemBuffer, ...counterBuffer]}
-        bind:this={stage}
-    />
-</div>
-<Swiper
-    spaceBetween={0}
-    slidesPerView={1}
-    shortSwipes={true}
-    mousewheel={{ forceToAxis: true, thresholdDelta: 20 }}
-    keyboard={{ enabled: true }}
-    modules={[Mousewheel, Keyboard]}
-    style="width: 100vw;"
-    on:slideChange={(e) => {
-        fineOffset.set(e.detail[0][0].activeIndex)
-        index = e.detail[0][0].activeIndex
-    }}
->
-    {#each bookShelf as book, i}
-        <SwiperSlide>
-            <div
-                class="tall"
-                id={`book-${i}`}
-                bind:this={scrollingBlocks[i]}
-                on:scroll={(e) => {
-                    // @ts-ignore
-                    scrollers[i] = e.target.scrollTop
-                    handleScroll(i)
-                }}
-            >
-                <div style="height: 150vh;" bind:this={scrollingBlocks[i]} />
-            </div>
-        </SwiperSlide>
-    {/each}
-</Swiper>
+<main>
+    <div
+        use:watchResize={() => {
+            // book.resize()
+            stage.deepRender()
+        }}
+    >
+        <CentreStage
+            objects={[...itemBuffer, ...counterBuffer]}
+            bind:this={stage}
+        />
+    </div>
+    <Swiper
+        spaceBetween={0}
+        slidesPerView={1}
+        shortSwipes={true}
+        mousewheel={{ forceToAxis: true, thresholdDelta: 20 }}
+        keyboard={{ enabled: true }}
+        modules={[Mousewheel, Keyboard]}
+        style="width: 100vw;"
+        on:slideChange={(e) => {
+            fineOffset.set(e.detail[0][0].activeIndex)
+            index = e.detail[0][0].activeIndex
+        }}
+    >
+        {#each bookShelf as book, i}
+            <SwiperSlide>
+                <div
+                    class="tall"
+                    id={`book-${i}`}
+                    bind:this={scrollingBlocks[i]}
+                    on:scroll={(e) => {
+                        // @ts-ignore
+                        scrollers[i] = e.target.scrollTop
+                        handleScroll(i)
+                    }}
+                >
+                    <div
+                        style="height: 150vh;"
+                        bind:this={scrollingBlocks[i]}
+                    />
+                </div>
+            </SwiperSlide>
+        {/each}
+    </Swiper>
+</main>
 
 <style>
+    main {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
     .tall {
         height: 100vh;
         overflow-y: scroll;
