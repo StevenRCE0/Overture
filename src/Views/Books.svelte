@@ -186,10 +186,10 @@
 
 <style>
     main {
-        position: absolute;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
+        position: fixed;
+        height: 0;
+        width: 0;
+        overflow: visible;
     }
     .tall {
         height: 100vh;
