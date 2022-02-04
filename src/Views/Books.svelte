@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { fade } from "svelte/transition"
+    import { fade } from "svelte/transition"
     import CentreStage from "../Views/CentreStage.svelte"
     import Booklet from "../Stuff/Booklet"
     import { fetchBook } from "../workers/gistParser"
@@ -13,6 +15,7 @@
     import { cubicInOut } from "svelte/easing"
     import "../../public/sourceFont.css"
 
+    let loading = true
     let bookShelf = new Array<Booklet>()
     let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
     let counterBuffer: THREE.Object3D<THREE.Event>[] = []
@@ -131,6 +134,7 @@
                     newBook.coverLoaded.then(() => stage.deepRender())
                 })
                 stage?.render()
+                loading = false
             }
         )
     })
@@ -138,6 +142,13 @@
 
 <title>Bookshelf</title>
 <main>
+    {#if loading}
+        <div id="LoadingPlaceholder" in:fade out:fade>
+            Loading
+            <br />
+            <span style="font-size: 23pt;">Swipe to go for the next book</span>
+        </div>
+    {/if}
     <div
         use:watchResize={() => {
             // book.resize()
@@ -199,5 +210,16 @@
     }
     .tall::-webkit-scrollbar {
         display: none;
+    }
+    #LoadingPlaceholder {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 33pt;
+        font-weight: lighter;
+        text-align: center;
+        color: #666;
+        z-index: 1;
     }
 </style>
