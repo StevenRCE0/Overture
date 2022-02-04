@@ -72,8 +72,8 @@ export function wrapText(
             line = line.replace(/\s*$/, '')
             context.fillText(line, x, y)
             line = words[n] + splitSpace
-            y += lineHeight
-            lineCount += 1
+            y += lineHeight * 2
+            lineCount += 2
         } else if (testWidth > maxWidth && n > 0) {
             context.fillText(line, x, y)
             line = words[n] + splitSpace
