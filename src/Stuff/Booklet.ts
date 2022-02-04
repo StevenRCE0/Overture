@@ -18,7 +18,7 @@ export function ratioPixels(given: number): number {
 
 class BookLet {
     preferences: BookletProps
-    loaded = false
+    loaded: boolean
     book: THREE.Object3D
     tape: THREE.Object3D
     tapeFont = "'Times New Roman', 'Noto Serif SC', Times, serif"
@@ -132,19 +132,16 @@ class BookLet {
 
     constructor(preferences: BookletProps) {
         let presetProps = {
-            cover: "/sf/why.jpg",
+            cover: "",
             colour: 0xe3e3e3,
             title: "Tape title TO test",
             author: "Me",
             comment:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra. Orci eu lobortis elementum nibh tellus molestie. Vulputate dignissim suspendisse in est. Vel pharetra vel turpis nunc. Malesuada nunc vel risus commodo. Nisi vitae suscipit tellus mauris. Posuere morbi leo urna molestie at elementum eu. Urna duis convallis convallis tellus. Urna molestie at elementum eu. Nunc sed blandit libero volutpat.",
         }
-        if (preferences.url) {
-            fetchBook(preferences.url).then((info) =>
-                Object.assign(presetProps, info)
-            )
-        } else {
-            this.preferences = Object.assign(presetProps, preferences)
+        this.preferences = Object.assign(presetProps, preferences)
+        if (this.preferences.cover.length === 0) {
+            this.loaded = true
         }
 
         const heroPrint = new THREE.MeshPhongMaterial({
