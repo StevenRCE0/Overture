@@ -58,7 +58,7 @@ class BookLet {
 
         tapeText.width = ratioPixels(this.tapeDimensions.width)
         tapeText.height = ratioPixels(this.tapeDimensions.height)
-        glyphs.fillStyle = "white"
+        glyphs.fillStyle = "hsl(27, 23%, 96%)"
         glyphs.fillRect(0, 0, tapeText.width, tapeText.height)
 
         // Printing Title
