@@ -3,6 +3,7 @@ import Redirect from "./Stuff/Redirect.svelte"
 import CentreStage from "./Views/CentreStage.svelte"
 import NativeThree from "./Views/NativeThree.svelte"
 import Books from "./Views/Books.svelte"
+import Tests from "./Views/Tests.svelte"
 
 export const routes = [
     {
@@ -22,7 +23,11 @@ export const routes = [
         component: NativeThree,
     },
     {
-        name: 'Books',
+        name: "Books",
         component: Books,
-    }
+    },
+    {
+        name: "Tests",
+        component: Tests,
+    },
 ]

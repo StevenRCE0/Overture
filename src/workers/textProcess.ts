@@ -57,18 +57,26 @@ export function wrapText(
     maxWidth: number,
     lineHeight: number
 ) {
-    const Chinese = isChinese(text)
-    var words = Chinese ? text.split("") : text.split(" ")
+    const splitSpace = isChinese(text) ? "" : " "
+    var words = text.split(splitSpace)
     var line = ""
     var lineCount = 1
 
     for (var n = 0; n < words.length; n++) {
-        var testLine = line + words[n] + (Chinese ? "" : " ")
+        var testLine = line + words[n] + splitSpace
         var metrics = context.measureText(testLine)
         var testWidth = metrics.width
-        if (testWidth > maxWidth && n > 0) {
+        if (
+            words[n].charAt(0) === "\n"
+        ) {
+            line = line.replace(/\s*$/, '')
             context.fillText(line, x, y)
-            line = words[n] + (Chinese ? "" : " ")
+            line = words[n] + splitSpace
+            y += lineHeight
+            lineCount += 1
+        } else if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y)
+            line = words[n] + splitSpace
             y += lineHeight
             lineCount += 1
         } else {
