@@ -82,11 +82,8 @@
             -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
                 bookShelf[index].book.position.y
         )
-        bookShelf[index].book.scale.x =
-            bookShelf[index].book.scale.y =
-            bookShelf[index].book.scale.z =
-                Math.max(1 - scrollers[index] / (innerHeight / 3.5), 0.5)
-
+        const applyBookScrollScale = Math.max(1 - scrollers[index] / (innerHeight / 3.5), 0.5)
+        bookShelf[index].book.scale.set(applyBookScrollScale, applyBookScrollScale, applyBookScrollScale)
         counterBuffer
             .filter((x, i) => i % 3 === 1)
             [index].scale.set(outtaScale[index], outtaScale[index], 1)
