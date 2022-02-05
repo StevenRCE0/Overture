@@ -97,7 +97,7 @@
                 books.map(async (bookInformation, bookIndex) => {
                     const newBook = new Booklet(bookInformation)
                     scrollers.push(0)
-                    figure = new Counter(books.length, bookIndex + 1)
+                    figure = new Counter(books.length, bookIndex + 1, 0.75)
                     bookShelf = [...bookShelf, {book: newBook.book}]
                     counterBuffer = [
                         ...counterBuffer,

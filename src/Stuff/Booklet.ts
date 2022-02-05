@@ -13,7 +13,7 @@ export interface BookletProps {
 }
 
 export function ratioPixels(given: number): number {
-    return given * window.devicePixelRatio * 5
+    return given * window.devicePixelRatio * 4
 }
 
 class BookLet {
@@ -33,7 +33,7 @@ class BookLet {
 
     tapeDimensions = {
         width: Math.min(100, window.innerWidth / 5),
-        height: 300,
+        height: 280,
         margin: ratioPixels(8),
         titleSize: ratioPixels(8),
         titleLineHeight: ratioPixels(11),
