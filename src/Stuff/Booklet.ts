@@ -32,7 +32,7 @@ class BookLet {
 
     tapeDimensions = {
         width: Math.min(100, window.innerWidth / 5),
-        height: 500,
+        height: 300,
         margin: ratioPixels(8),
         titleSize: ratioPixels(8),
         titleLineHeight: ratioPixels(11),
@@ -137,7 +137,7 @@ class BookLet {
             title: "Tape title test",
             author: "Author",
             comment:
-                "Lorem ipsum \ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra. Orci eu lobortis elementum nibh tellus molestie. Vulputate dignissim suspendisse in est. Vel pharetra vel turpis nunc. Malesuada nunc vel risus commodo. Nisi vitae suscipit tellus mauris. Posuere morbi leo urna molestie at elementum eu. Urna duis convallis convallis tellus. Urna molestie at elementum eu. Nunc sed blandit libero volutpat.",
+                "推荐的话语正在等待着被编写……",
         }
         this.preferences = Object.assign(presetProps, preferences)
         if (this.preferences.cover.length === 0) {

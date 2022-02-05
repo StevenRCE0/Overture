@@ -22,7 +22,6 @@
     let scrollers: number[] = []
     let scrollingBlocks: HTMLElement[] = []
     let stage: CentreStage
-    let index: number
     const fineOffset = tweened(0, {
         duration: 2000,
         easing: cubicInOut,
@@ -131,10 +130,12 @@
                     figure.outOf.translateZ(-115)
                     newBook.book.translateX(bookIndex * innerWidth * Spacer)
                     newBook.tape.translateX(bookIndex * innerWidth * Spacer)
-                    newBook.coverLoaded.then(() => stage.deepRender())
+                    newBook.coverLoaded.then(() => {
+                        stage.deepRender()
+                        loading = false
+                    })
                 })
                 stage?.render()
-                loading = false
             }
         )
     })
@@ -146,10 +147,11 @@
         <div id="LoadingPlaceholder" in:fade out:fade>
             Loading
             <br />
-            <span style="font-size: 23pt;">Swipe to go for the next book</span>
+            <span id="SwipeIndicator">Swipe to go for the next book</span>
         </div>
     {/if}
     <div
+        id="BookshelfStage"
         use:watchResize={() => {
             // book.resize()
             stage.deepRender()
@@ -186,7 +188,7 @@
                     }}
                 >
                     <div
-                        style="height: 150vh;"
+                        style="height: calc(100vh + 500pt);"
                         bind:this={scrollingBlocks[i]}
                     />
                 </div>
@@ -211,6 +213,9 @@
     .tall::-webkit-scrollbar {
         display: none;
     }
+    #BookshelfStage {
+        z-index: 0;
+    }
     #LoadingPlaceholder {
         position: fixed;
         top: 50%;
@@ -221,5 +226,21 @@
         text-align: center;
         color: #666;
         z-index: 1;
+    }
+    #SwipeIndicator {
+        display: block;
+        font-size: 23pt;
+        animation: SwipeIndication 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards;
+    }
+    @keyframes SwipeIndication {
+        0% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(-10px);
+        }
+        100% {
+            transform: translateX(0);
+        }
     }
 </style>
