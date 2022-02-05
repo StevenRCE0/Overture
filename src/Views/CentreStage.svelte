@@ -172,6 +172,7 @@
     })
 
     onDestroy(() => {
+        scene.clear()
         window
             .matchMedia("(prefers-color-scheme: dark)")
             .removeEventListener("change", changeAppearance)

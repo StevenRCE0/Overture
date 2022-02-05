@@ -1,22 +1,25 @@
 <script lang="ts">
-    import { fade } from "svelte/transition"
-    import { fade } from "svelte/transition"
     import CentreStage from "../Views/CentreStage.svelte"
     import Booklet from "../Stuff/Booklet"
+    import Counter from "../Stuff/Counter"
     import { fetchBook } from "../workers/gistParser"
-    import { Vector3 } from "three"
     import { watchResize } from "svelte-watch-resize"
-    import { onDestroy, onMount } from "svelte"
+    import { onMount } from "svelte"
+    import { cubicInOut } from "svelte/easing"
     import { tweened } from "svelte/motion"
+    import { fade } from "svelte/transition"
     import { Swiper, SwiperSlide } from "swiper/svelte"
     import { Mousewheel, Keyboard } from "swiper"
     import "swiper/css"
-    import Counter from "../Stuff/Counter"
-    import { cubicInOut } from "svelte/easing"
     import "../../public/sourceFont.css"
 
+    interface BookOnShelf {
+        book: THREE.Object3D<THREE.Event>,
+        tape?: THREE.Object3D<THREE.Event>
+    }
+
     let loading = true
-    let bookShelf = new Array<Booklet>()
+    let bookShelf = new Array<BookOnShelf>()
     let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
     let counterBuffer: THREE.Object3D<THREE.Event>[] = []
     let scrollers: number[] = []
@@ -51,7 +54,7 @@
             book.book.translateX(
                 -(number - index) * innerWidth * Spacer - book.book.position.x
             )
-            book.tape.translateX(
+            book.tape?.translateX(
                 -(number - index) * innerWidth * Spacer - book.tape.position.x
             )
             counterBuffer
@@ -68,7 +71,7 @@
     }
 
     function handleScroll(index: number) {
-        bookShelf[index].tape.translateY(
+        bookShelf[index].tape?.translateY(
             scrollers[index] / 3 - bookShelf[index].tape.position.y
         )
         bookShelf[index].book.rotateX(
@@ -94,12 +97,11 @@
     onMount(() => {
         fetchBook("/gist/StevenRCE0/a68460422937f182bc591788fa30e930/raw").then(
             (books) => {
-                books.map((bookInformation, bookIndex) => {
+                books.map(async (bookInformation, bookIndex) => {
                     const newBook = new Booklet(bookInformation)
                     scrollers.push(0)
                     figure = new Counter(books.length, bookIndex + 1)
-                    bookShelf = [...bookShelf, newBook]
-                    itemBuffer = [...itemBuffer, newBook.book, newBook.tape]
+                    bookShelf = [...bookShelf, {book: newBook.book}]
                     counterBuffer = [
                         ...counterBuffer,
                         figure.digitCurrent,
@@ -111,7 +113,6 @@
                     )
                     newBook.book.translateY(15)
                     newBook.book.translateZ(-5)
-                    newBook.tape.translateZ(-20)
                     figure.digitCurrent.translateX(
                         bookIndex * innerWidth * Spacer
                     )
@@ -119,7 +120,6 @@
                         bookIndex * innerWidth * Spacer
                     )
                     figure.outOf.translateX(bookIndex * innerWidth * Spacer)
-
                     figure.digitCurrent.translateX(-30)
                     figure.digitCurrent.translateY(75)
                     figure.digitCurrent.translateZ(-75)
@@ -129,10 +129,16 @@
                     figure.outOf.translateY(90)
                     figure.outOf.translateZ(-115)
                     newBook.book.translateX(bookIndex * innerWidth * Spacer)
-                    newBook.tape.translateX(bookIndex * innerWidth * Spacer)
+                    itemBuffer = [...itemBuffer, newBook.book]
                     newBook.coverLoaded.then(() => {
                         stage.deepRender()
                         loading = false
+                    })
+                    newBook.tape.then((tape) => {
+                        tape.translateZ(-20)
+                        tape.translateX(bookIndex * innerWidth * Spacer)
+                        bookShelf[bookIndex].tape = tape
+                        itemBuffer = [...itemBuffer, tape]
                     })
                 })
                 stage?.render()
@@ -230,7 +236,8 @@
     #SwipeIndicator {
         display: block;
         font-size: 23pt;
-        animation: SwipeIndication 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards;
+        animation: SwipeIndication 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+            0.5s forwards;
     }
     @keyframes SwipeIndication {
         0% {

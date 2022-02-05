@@ -1,14 +1,14 @@
 import * as THREE from "three"
-import { fetchBook } from "../workers/gistParser"
 import { multiLineTitle, toTitleCase, wrapText } from "../workers/textProcess"
+import { Canvg } from "canvg"
 
 // Use 360 * 566 for the size of the cover image
 export interface BookletProps {
-    url?: string
     cover?: string
     colour?: THREE.ColorRepresentation
     title?: string
     author?: string
+    reading?: boolean
     comment?: string
 }
 
@@ -20,8 +20,9 @@ class BookLet {
     preferences: BookletProps
     loaded: boolean
     book: THREE.Object3D
-    tape: THREE.Object3D
+    tape: Promise<THREE.Object3D>
     tapeFont = "'Times New Roman', 'Noto Serif SC', Times, serif"
+    catLocation = "./readingCat.svg"
     coverLoaded = new Promise((resolve) => {
         setInterval(() => {
             if (this.loaded) {
@@ -51,10 +52,32 @@ class BookLet {
         }
     }
 
-    printTape = () => {
+    printReadingCat = async (
+        context: CanvasRenderingContext2D,
+        offsetX: number,
+        offsetY: number
+    ) => {
+        const instance = await Canvg.from(context, this.catLocation, {
+            offsetX: offsetX,
+            offsetY: offsetY,
+            ignoreAnimation: true,
+            ignoreMouse: true,
+            ignoreClear: true,
+            ignoreDimensions: true,
+        })
+        instance.start()
+        instance.stop()
+    }
+
+    printTape = async () => {
         const tapeText = document.createElement("canvas")
         const glyphs = tapeText.getContext("2d")
         let writerOffset = ratioPixels(38)
+        const tapeGeometry = new THREE.BoxBufferGeometry(
+            this.tapeDimensions.width,
+            this.tapeDimensions.height,
+            1
+        )
 
         tapeText.width = ratioPixels(this.tapeDimensions.width)
         tapeText.height = ratioPixels(this.tapeDimensions.height)
@@ -93,29 +116,41 @@ class BookLet {
                 this.tapeDimensions.authorLineHeight +
             ratioPixels(3)
 
-        // Printing Comment
-        glyphs.font = `normal ${this.tapeDimensions.commentSize}pt ${this.tapeFont}`
-        glyphs.fillStyle = "black"
-        glyphs.textAlign = "left"
-        writerOffset +=
-            wrapText(
+        if (this.preferences.reading) {
+            // Printing Reading Cat
+            glyphs.fillStyle = "#999"
+            await this.printReadingCat(
                 glyphs,
-                this.preferences.comment,
-                this.tapeDimensions.margin,
-                writerOffset,
-                ratioPixels(this.tapeDimensions.width) -
-                    this.tapeDimensions.margin * 2,
-                this.tapeDimensions.commentLineHeight
-            ) * this.tapeDimensions.commentLineHeight
-
+                0,
+                -ratioPixels(this.tapeDimensions.height / 2) +
+                    writerOffset +
+                    ratioPixels(50)
+            )
+            glyphs.textAlign = "center"
+            glyphs.fillText(
+                "I'm reading...",
+                ratioPixels(this.tapeDimensions.width) / 2,
+                writerOffset + ratioPixels(80)
+            )
+        } else {
+            // Printing Comment
+            glyphs.font = `normal ${this.tapeDimensions.commentSize}pt ${this.tapeFont}`
+            glyphs.fillStyle = "black"
+            glyphs.textAlign = "left"
+            writerOffset +=
+                wrapText(
+                    glyphs,
+                    this.preferences.comment,
+                    this.tapeDimensions.margin,
+                    writerOffset,
+                    ratioPixels(this.tapeDimensions.width) -
+                        this.tapeDimensions.margin * 2,
+                    this.tapeDimensions.commentLineHeight
+                ) * this.tapeDimensions.commentLineHeight
+        }
         const tapeTextTexture = new THREE.Texture(tapeText)
         tapeTextTexture.needsUpdate = true
 
-        const tapeGeometry = new THREE.BoxBufferGeometry(
-            this.tapeDimensions.width,
-            this.tapeDimensions.height,
-            1
-        )
         tapeGeometry.translate(0, -this.tapeDimensions.height / 2, -10)
         const tapeMesh = new THREE.Mesh(
             tapeGeometry,
@@ -136,11 +171,10 @@ class BookLet {
             colour: 0xe3e3e3,
             title: "Tape title test",
             author: "Author",
-            comment:
-                "推荐的话语正在等待着被编写……",
+            comment: "推荐的话语正在等待着被编写……",
         }
         this.preferences = Object.assign(presetProps, preferences)
-        if (this.preferences.cover.length === 0) {
+        if (this.preferences.cover.length === 0 && !this.preferences.reading) {
             this.loaded = true
         }
 
@@ -148,7 +182,7 @@ class BookLet {
             map: new THREE.TextureLoader().load(
                 this.preferences.cover,
                 () => {
-                    this.loaded = true
+                    this.loaded = this.preferences.reading || true
                     booklet.add(coverHeroMesh)
                 },
                 () => {},
@@ -196,7 +230,9 @@ class BookLet {
             booklet.add(mesh)
         }
         this.book = booklet
-        this.tape = this.printTape()
+        this.tape = new Promise((resolve, reject) => {
+            resolve(this.printTape())
+        })
     }
 }
 
