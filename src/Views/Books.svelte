@@ -166,13 +166,13 @@
         spaceBetween={0}
         slidesPerView={1}
         shortSwipes={true}
+        edgeSwipeDetection={"prevent"}
         mousewheel={{ forceToAxis: true, thresholdDelta: 20 }}
         keyboard={{ enabled: true }}
         modules={[Mousewheel, Keyboard]}
         style="width: 100vw;"
         on:slideChange={(e) => {
             fineOffset.set(e.detail[0][0].activeIndex)
-            index = e.detail[0][0].activeIndex
         }}
     >
         {#each bookShelf as book, i}
