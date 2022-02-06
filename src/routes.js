@@ -1,7 +1,6 @@
 import Overture from "./Overture.svelte"
 import Redirect from "./Stuff/Redirect.svelte"
 import CentreStage from "./Views/CentreStage.svelte"
-import NativeThree from "./Views/NativeThree.svelte"
 import Books from "./Views/Books.svelte"
 import Tests from "./Views/Tests.svelte"
 
@@ -19,15 +18,14 @@ export const routes = [
         component: CentreStage,
     },
     {
-        name: "native",
-        component: NativeThree,
-    },
-    {
         name: "Books",
         component: Books,
     },
+]
+
+export const testRoutes = [
     {
         name: "Tests",
-        component: Tests,
-    },
+        component: Tests
+    }
 ]

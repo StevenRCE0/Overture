@@ -1,10 +1,13 @@
 <script lang="ts">
     import { Router } from "svelte-router-spa"
-    import { routes } from "./routes"
+    import { routes, testRoutes } from "./routes"
+
+    // @ts-ignore
+    const finalRoutes = isProduction ? routes : routes.concat(testRoutes)
 </script>
 
 <main>
-    <Router {routes} />
+    <Router routes={finalRoutes} />
 </main>
 
 <style>
