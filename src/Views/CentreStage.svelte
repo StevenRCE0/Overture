@@ -28,7 +28,7 @@
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.shadowMap.enabled = true
-    const camera = new THREE.PerspectiveCamera()
+    export const camera = new THREE.PerspectiveCamera()
     camera.translateOnAxis(new THREE.Vector3(0, 0, 1), 100)
     camera.fov = 60
     camera.near = 1
