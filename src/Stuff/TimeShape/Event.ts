@@ -22,15 +22,16 @@ interface ShapeFormationProps {
 
 export default class TimeEvent {
     properties: EventSource
-    oddSource: {
-        x: number
-        y: number
-        z: number
-    }
 
     shapeFormation = (params: ShapeFormationProps) => {
         const baseShape = new THREE.Shape()
         baseShape.moveTo(-params.urgency, 0)
+        const baseMaterial = new THREE.MeshStandardMaterial()
+        const vessel = new THREE.ExtrudeGeometry(baseShape, {
+            steps: 1,
+            bevelEnabled: false,
+        })
+        return new THREE.Mesh(vessel, baseMaterial)
     }
 
     constructor(properties: EventSource) {
