@@ -3,6 +3,7 @@ import Redirect from "./Stuff/Redirect.svelte"
 import CentreStage from "./Views/CentreStage.svelte"
 import Books from "./Views/Books.svelte"
 import Tests from "./Views/Tests.svelte"
+import TimeShape from "./Views/TimeShape.svelte"
 
 export const routes = [
     {
@@ -27,5 +28,9 @@ export const testRoutes = [
     {
         name: "Tests",
         component: Tests
+    },
+    {
+        name: "TimeShape",
+        component: TimeShape
     }
 ]

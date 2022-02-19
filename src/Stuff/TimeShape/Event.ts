@@ -22,6 +22,7 @@ interface ShapeFormationProps {
 
 export default class TimeEvent {
     properties: EventSource
+    geometry: THREE.Object3D<THREE.Event>
 
     shapeFormation = (params: ShapeFormationProps) => {
         const baseShape = new THREE.Shape()
