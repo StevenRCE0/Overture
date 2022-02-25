@@ -17,7 +17,7 @@
     }, {
         eventTitle: "",
         timestamp: 70,
-        importance: 28,
+        importance: 22,
         urgency: 10,
     }]
 
