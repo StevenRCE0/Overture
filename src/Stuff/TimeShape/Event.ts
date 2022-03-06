@@ -31,7 +31,7 @@ export default class TimeEvent {
         baseShape.bezierCurveTo(params.urgency / 2, params.importance, params.urgency, params.importance / 2, params.urgency, 0)
         baseShape.bezierCurveTo(params.urgency, -params.importance / 2, params.urgency / 2, -params.importance, 0, -params.importance)
         baseShape.bezierCurveTo(-params.urgency / 2, -params.importance, -params.urgency, -params.importance / 2, -params.urgency, 0)
-        const baseMaterial = new THREE.MeshStandardMaterial({color: 0x66ccff})
+        const baseMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, roughness: 0.5, metalness: 0.2})
         const vessel = new THREE.ExtrudeGeometry(baseShape, {
             steps: 1,
             bevelEnabled: false,

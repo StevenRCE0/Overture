@@ -8,18 +8,34 @@
     import { onMount } from "svelte"
 
     var camera: THREE.PerspectiveCamera
+    const cameraMountpoints = {
+        perspective: {
+            position: new THREE.Vector3(-100, 25, 75),
+            rotation: new THREE.Euler(-Math.PI / 8, -Math.PI / 3, 0),
+        },
+    }
+    function applyCameraMount(
+        mountpoint: typeof cameraMountpoints.perspective,
+        camera: THREE.PerspectiveCamera
+    ) {
+        camera.rotation.copy(mountpoint.rotation)
+        camera.position.copy(mountpoint.position)
+    }
 
-    const foobarEvents: EventSource[] = [{
-        eventTitle: "",
-        timestamp: 0,
-        importance: 20,
-        urgency: 30,
-    }, {
-        eventTitle: "",
-        timestamp: 70,
-        importance: 22,
-        urgency: 10,
-    }]
+    const foobarEvents: EventSource[] = [
+        {
+            eventTitle: "",
+            timestamp: 0,
+            importance: 20,
+            urgency: 30,
+        },
+        {
+            eventTitle: "",
+            timestamp: 40,
+            importance: 22,
+            urgency: 10,
+        },
+    ]
 
     const eventSources: Array<EventSource> = [...foobarEvents]
     const events = eventSources.map((source) => new TimeEvent(source))
@@ -31,8 +47,7 @@
     const space = new Space(spaceParameterConstructed)
 
     onMount(() => {
-        camera.rotateX(-Math.PI / 16)
-        camera.rotateY(-Math.PI / 16)
+        applyCameraMount(cameraMountpoints.perspective, camera)
     })
 </script>
 
