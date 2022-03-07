@@ -3,6 +3,7 @@ import Redirect from "./Stuff/Redirect.svelte"
 import CentreStage from "./Views/CentreStage.svelte"
 import Books from "./Views/Books.svelte"
 import Tests from "./Views/Tests.svelte"
+import Scrollers from "./tests/Scrollers.svelte"
 import TimeShape from "./Views/TimeShape.svelte"
 
 export const routes = [
@@ -22,15 +23,19 @@ export const routes = [
         name: "Books",
         component: Books,
     },
+    {
+        name: "Scrollers",
+        component: Scrollers,
+    },
 ]
 
 export const testRoutes = [
     {
         name: "Tests",
-        component: Tests
+        component: Tests,
     },
     {
         name: "TimeShape",
-        component: TimeShape
-    }
+        component: TimeShape,
+    },
 ]
