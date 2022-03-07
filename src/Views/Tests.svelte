@@ -1,18 +1,18 @@
 <script lang="ts">
-import { onMount } from "svelte";
-
-    import { wrapText } from "../workers/textProcess"
-    const text = "Hello this       \nWorld"
-    onMount(() => {
-        const canvas = document.getElementById("canvas") as HTMLCanvasElement
-        const ctx = canvas.getContext("2d")!
-        ctx.font = "48px serif"
-        ctx.textAlign = "center"
-        ctx.textBaseline = "middle"
-        wrapText(ctx, text, canvas.width / 2, canvas.height / 2, canvas.width, 48)
-    })
+    import Bomb from "../mob/bomb/Bomb.svelte"
+    let progress: number = 0
 </script>
 
-<h1>
-    <canvas id="canvas" />
-</h1>
+<div class="center">
+    <Bomb bind:progress />
+    <h1>{Math.round(progress * 100)}%</h1>
+</div>
+
+<style>
+    .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>

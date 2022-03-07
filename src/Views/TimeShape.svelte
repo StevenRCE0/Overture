@@ -28,12 +28,14 @@
             timestamp: 0,
             importance: 20,
             urgency: 30,
+            revelance: 0.5
         },
         {
             eventTitle: "",
             timestamp: 40,
             importance: 22,
             urgency: 10,
+            revelance: 0.7
         },
     ]
 
