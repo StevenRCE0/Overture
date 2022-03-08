@@ -1,13 +1,13 @@
 <script lang="ts">
     export let progress = 0
     let width: number
-    $: translation = width * width * progress / 69 / 1.1
+    $: translation = (width * width * progress) / (28 * 1.5)
 </script>
 
 <div style="position: absolute;width: 100%;" bind:clientWidth={width} />
 <svg
-    width="100%"
-    height="100%"
+    width="200px"
+    height="80px"
     viewBox="0 0 2000 800"
     preserveAspectRatio="xMinYMin meet"
     version="1.1"
@@ -29,7 +29,7 @@
     </clipPath>
     <g clip-path="url(#_clip1)">
         <path
-            style="transform: scaleX({1 + progress * width / 69 / 2});"
+            style="transform: scaleX({1 + (progress * width) / 56 / 2});"
             d="M0,644c97.576,0 281.362,10.554 292.553,10.554c25.612,0 51.469,-0.952 76.874,3.059c16.866,2.663 35.656,7.762 54.517,11.021c20.09,3.472 40.256,4.824 58.521,-0.158c18.107,-4.938 33.026,-14.366 49.609,-22.657c3.949,-1.975 5.552,-6.784 3.577,-10.733c-1.974,-3.949 -6.784,-5.553 -10.733,-3.578c-15.625,7.813 -29.601,16.879 -46.662,21.532c-16.102,4.392 -33.877,2.888 -51.587,-0.172c-18.94,-3.273 -37.81,-8.385 -54.746,-11.059c-26.231,-4.142 -52.925,-3.255 -79.37,-3.255c-11.191,0 -194.977,-10.554 -292.553,-10.554c-4.415,0 -8,3.585 -8,8c-0,4.415 3.585,8 8,8Z"
         />
         <path

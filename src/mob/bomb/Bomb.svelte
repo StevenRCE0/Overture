@@ -6,7 +6,7 @@
 </script>
 
 <div class="wrap">
-    <Tnt style="width: 100px" />
+    <Tnt style="width: 80px" />
     <div class="wire">
         <input
             class="slider"
@@ -22,7 +22,8 @@
 
 <style>
     .wrap {
-        height: 100px;
+        height: 80px;
+        /* width: max-content; */
         display: flex;
         flex-direction: row;
         text-align: left;
