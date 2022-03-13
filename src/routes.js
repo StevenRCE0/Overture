@@ -5,6 +5,7 @@ import Books from "./Views/Books.svelte"
 import Tests from "./Views/Tests.svelte"
 import Scrollers from "./tests/Scrollers.svelte"
 import TimeShape from "./Views/TimeShape.svelte"
+import MikuPlayer from "./Views/MikuPlayer.svelte"
 
 export const routes = [
     {
@@ -37,5 +38,9 @@ export const testRoutes = [
     {
         name: "TimeShape",
         component: TimeShape,
+    },
+    {
+        name: "MikuPlayer",
+        component: MikuPlayer,
     },
 ]
