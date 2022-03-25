@@ -14,7 +14,7 @@
     import "../../public/sourceFont.css"
 
     interface BookOnShelf {
-        book: THREE.Object3D<THREE.Event>,
+        book: THREE.Object3D<THREE.Event>
         tape?: THREE.Object3D<THREE.Event>
     }
 
@@ -62,7 +62,7 @@
                 .map((entry, entryIndex) =>
                     entry.translateX(
                         -(number - index) * innerWidth * Spacer +
-                            (entryIndex - 1) * 30 -
+                            (entryIndex - 1) * (2 / window.devicePixelRatio) * 30 -
                             entry.position.x
                     )
                 )
@@ -82,8 +82,15 @@
             -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
                 bookShelf[index].book.position.y
         )
-        const applyBookScrollScale = Math.max(1 - scrollers[index] / (innerHeight / 3.5), 0.5)
-        bookShelf[index].book.scale.set(applyBookScrollScale, applyBookScrollScale, applyBookScrollScale)
+        const applyBookScrollScale = Math.max(
+            1 - scrollers[index] / (innerHeight / 3.5),
+            0.5
+        )
+        bookShelf[index].book.scale.set(
+            applyBookScrollScale,
+            applyBookScrollScale,
+            applyBookScrollScale
+        )
         counterBuffer
             .filter((x, i) => i % 3 === 1)
             [index].scale.set(outtaScale[index], outtaScale[index], 1)
@@ -98,7 +105,7 @@
                     const newBook = new Booklet(bookInformation)
                     scrollers.push(0)
                     figure = new Counter(books.length, bookIndex + 1, 0.75)
-                    bookShelf = [...bookShelf, {book: newBook.book}]
+                    bookShelf = [...bookShelf, { book: newBook.book }]
                     counterBuffer = [
                         ...counterBuffer,
                         figure.digitCurrent,
@@ -117,14 +124,30 @@
                         bookIndex * innerWidth * Spacer
                     )
                     figure.outOf.translateX(bookIndex * innerWidth * Spacer)
-                    figure.digitCurrent.translateX(-30)
-                    figure.digitCurrent.translateY(75)
-                    figure.digitCurrent.translateZ(-75)
-                    figure.digitTotal.translateX(30)
-                    figure.digitTotal.translateY(75)
-                    figure.digitTotal.translateZ(-75)
-                    figure.outOf.translateY(90)
-                    figure.outOf.translateZ(-115)
+                    figure.digitCurrent.translateX(
+                        (2 / window.devicePixelRatio) * -30
+                    )
+                    figure.digitCurrent.translateY(
+                        40 / window.devicePixelRatio + innerHeight * 0.06
+                    )
+                    figure.digitCurrent.translateZ(
+                        (2 / window.devicePixelRatio) * -75
+                    )
+                    figure.digitTotal.translateX(
+                        (2 / window.devicePixelRatio) * 30
+                    )
+                    figure.digitTotal.translateY(
+                        40 / window.devicePixelRatio + innerHeight * 0.06
+                    )
+                    figure.digitTotal.translateZ(
+                        (2 / window.devicePixelRatio) * -75
+                    )
+                    figure.outOf.translateY(
+                        100 / window.devicePixelRatio + innerHeight * 0.04
+                    )
+                    figure.outOf.translateZ(
+                        (2 / window.devicePixelRatio) * -115
+                    )
                     newBook.book.translateX(bookIndex * innerWidth * Spacer)
                     itemBuffer = [...itemBuffer, newBook.book]
                     newBook.coverLoaded.then(() => {
