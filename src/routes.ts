@@ -6,6 +6,7 @@ import Tests from "./Views/Tests.svelte"
 import Scrollers from "./tests/Scrollers.svelte"
 import TimeShape from "./Views/TimeShape.svelte"
 import MikuPlayer from "./Views/MikuPlayer.svelte"
+import GetChicken from "./Views/GetChicken.svelte"
 
 export const routes = [
     {
@@ -28,6 +29,10 @@ export const routes = [
         name: "Scrollers",
         component: Scrollers,
     },
+    {
+        name: "Chicken",
+        component: GetChicken,
+    }
 ]
 
 export const testRoutes = [

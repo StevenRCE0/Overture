@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { multiLineTitle, toTitleCase, wrapText } from "../workers/textProcess"
+import { toTitleCase, wrapText } from "../workers/textProcess"
 import { Canvg } from "canvg"
 
 // Use 360 * 566 for the size of the cover image
