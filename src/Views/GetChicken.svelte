@@ -19,15 +19,38 @@
         context: CanvasRenderingContext2D,
         offsetX: number,
         offsetY: number,
-        maxWidth?: number,
-        maxHeight?: number
+        maxWidth: number,
+        maxHeight: number
     ) => {
         const renderContainer = document.createElement("canvas")
         const renderContext = renderContainer.getContext("2d")
         const instance = await Canvg.from(renderContext, SVGLocation)
-        instance.resize(maxWidth, maxHeight, true)
+        instance.resize(
+            maxWidth * devicePixelRatio,
+            maxHeight * devicePixelRatio,
+            true
+        )
         instance.render()
-        context.drawImage(renderContext.canvas, offsetX, offsetY)
+        const ratio =
+            instance.screen.viewPort.width / instance.screen.viewPort.height
+        let size = {
+            width: instance.screen.viewPort.width,
+            height: instance.screen.viewPort.height,
+        }
+        if (ratio > 1) {
+            size.width = maxWidth
+            size.height = maxWidth / ratio
+        } else {
+            size.width = maxHeight * ratio
+            size.height = maxHeight
+        }
+        context.drawImage(
+            renderContext.canvas,
+            offsetX,
+            offsetY,
+            size.width,
+            size.height
+        )
     }
 
     $: chicken = {
@@ -45,9 +68,26 @@
         context.font = "normal 21px 'Wawati SC'"
         wrapText(context, chicken.wishes[0], 120, 120, 160, 21)
         wrapText(context, chicken.skills[0], 120, 210, 160, 21)
-        printSVG(chickenLocation, context, 0, 400)
+        printSVG(chickenLocation, context, 25, 320, 250, 250)
         printSVG(wishSVGLocation, context, 10, 80, 100, 100)
         printSVG(skillSVGLocation, context, 10, 180, 100, 100)
+    }
+
+    const downloadChicken = async () => {
+        await mainCanvas.getCanvas().toBlob((blob) => {
+            const pngUrl = URL.createObjectURL(blob)
+            const link = document.createElement("a")
+            link.href = pngUrl
+            link.download = `${chicken.name}的名片.png`
+            link.dataset.downloadurl = [
+                "image/png",
+                link.download,
+                link.href,
+            ].join(":")
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }, "image/png")
     }
 </script>
 
@@ -77,6 +117,8 @@
             </td>
         </tr>
     </table>
+    <button class="WeirdoButton" on:click={() => downloadChicken()}>下载</button
+    >
 </main>
 
 <style scoped>
@@ -102,5 +144,11 @@
     #propTable input {
         height: 100%;
         margin: 0;
+    }
+    .WeirdoButton {
+        text-decoration: underline;
+        color: #333;
+        font-size: 27pt;
+        font-family: "Wawati SC";
     }
 </style>
