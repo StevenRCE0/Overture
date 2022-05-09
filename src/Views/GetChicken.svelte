@@ -123,16 +123,12 @@
 
 <style scoped>
     #preview {
-        margin-left: 50%;
-        margin-top: 2rem;
-        transform: translateX(-50%);
+        margin: 5px auto 0 auto;
         border: 1px solid #000;
         width: min-content;
     }
     #propTable {
-        margin-left: 50%;
-        margin-top: 2rem;
-        transform: translateX(-50%);
+        margin: 5px auto 0 auto;
     }
     #propTable td {
         vertical-align: middle;
