@@ -7,9 +7,9 @@
 
     import "../mob/miku/buttonStyles.css"
 
-    import Senbonzakura from "../mob/miku/Senbonzakura.svelte"
+    import SenbonZakura from "../mob/miku/SenbonZakura.svelte"
 
-    const trackIndex: Array<typeof Senbonzakura> = [Senbonzakura]
+    const trackIndex: Array<typeof SenbonZakura> = [SenbonZakura]
 
     let playerAppDOM: HTMLElement
     let trackPlaying = 0
