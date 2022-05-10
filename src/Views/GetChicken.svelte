@@ -1,13 +1,8 @@
 <script lang="ts">
+    import type { ChickenCard } from "../Stuff/Chicken/chicken"
     import Canvg from "canvg"
     import { wrapText } from "../workers/textProcess"
     import { Canvas, Layer } from "svelte-canvas"
-
-    interface ChickenCard {
-        name: string
-        wishes: string[]
-        skills: string[]
-    }
 
     const chickenLocation = "./assets/chasingChicken.svg"
     const skillSVGLocation = "./assets/skill.svg"
@@ -55,8 +50,10 @@
 
     $: chicken = {
         name: "Chasing Chicken",
+        slogan: "",
         wishes: ["To be a chicken", "To be a chicken", "To be a chicken"],
         skills: ["To be a chicken", "To be a chicken", "To be a chicken"],
+        tel: "",
     } as ChickenCard
 
     $: render = ({ context, width, height }) => {

@@ -7,6 +7,7 @@ import Scrollers from "./tests/Scrollers.svelte"
 import TimeShape from "./Views/TimeShape.svelte"
 import MikuPlayer from "./Views/MikuPlayer.svelte"
 import GetChicken from "./Views/GetChicken.svelte"
+import FormChicken from "./Views/FormChicken.svelte"
 
 export const routes = [
     {
@@ -48,4 +49,8 @@ export const testRoutes = [
         name: "MikuPlayer",
         component: MikuPlayer,
     },
+    {
+        name: "FormChicken",
+        component: FormChicken,
+    }
 ]
