@@ -1,5 +1,5 @@
-import * as THREE from "three"
-import { ratioPixels } from "./Booklet"
+import * as THREE from 'three'
+import { ratioPixels } from './Booklet'
 
 export default class Counter {
     total: number
@@ -13,21 +13,21 @@ export default class Counter {
         height: 99,
     }
 
-    makeTextTexture(text: string, fill: string = "white", multiplier = 1) {
-        const currentFigureText = document.createElement("canvas")
-        const glyphs = currentFigureText.getContext("2d")
+    makeTextTexture(text: string, fill: string = 'white', multiplier = 1) {
+        const currentFigureText = document.createElement('canvas')
+        const glyphs = currentFigureText.getContext('2d')
 
         currentFigureText.width =
             ratioPixels(this.dimensions.width) * multiplier
         currentFigureText.height =
             ratioPixels(this.dimensions.height) * multiplier
-        glyphs.fillStyle = "black"
+        glyphs.fillStyle = 'black'
         glyphs.fillRect(0, 0, currentFigureText.width, currentFigureText.height)
 
         glyphs.font = `bold ${this.dimensions.width * multiplier}pt 'Cochin'`
 
         glyphs.fillStyle = fill
-        glyphs.textAlign = "center"
+        glyphs.textAlign = 'center'
         glyphs.fillText(
             text,
             currentFigureText.width / 2,
@@ -46,17 +46,17 @@ export default class Counter {
 
         const totalTexture = this.makeTextTexture(
             this.total.toString(),
-            "white",
+            'white',
             multiplier
         )
         const currentTexture = this.makeTextTexture(
             this.current.toString(),
-            "white",
+            'white',
             multiplier
         )
         const outOfTexture = this.makeTextTexture(
-            "out of",
-            "#777",
+            'out of',
+            '#777',
             multiplier * 0.8
         )
 
@@ -70,7 +70,7 @@ export default class Counter {
             new THREE.MeshBasicMaterial({
                 alphaMap: totalTexture,
                 transparent: true,
-                color: "black",
+                color: 'black',
             })
         )
         this.digitCurrent = new THREE.Mesh(
@@ -78,7 +78,7 @@ export default class Counter {
             new THREE.MeshBasicMaterial({
                 alphaMap: currentTexture,
                 transparent: true,
-                color: "black",
+                color: 'black',
             })
         )
         this.outOf = new THREE.Mesh(
@@ -86,7 +86,7 @@ export default class Counter {
             new THREE.MeshBasicMaterial({
                 alphaMap: outOfTexture,
                 transparent: true,
-                color: "black",
+                color: 'black',
             })
         )
     }

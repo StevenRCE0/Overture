@@ -1,4 +1,4 @@
-import type { Renderer } from "three"
+import type { Renderer } from 'three'
 
 export function resizeRendererToDisplaySize(renderer: Renderer) {
     const canvas = renderer.domElement

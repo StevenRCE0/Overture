@@ -1,17 +1,17 @@
-import type { Route } from "svelte-router-spa/types/components/router"
-import Overture from "./Overture.svelte"
-import Redirect from "./Stuff/Redirect.svelte"
-import CentreStage from "./Views/CentreStage.svelte"
-import Books from "./Views/Books.svelte"
-import Tests from "./Views/Tests.svelte"
-import Scrollers from "./tests/Scrollers.svelte"
-import TimeShape from "./Views/TimeShape.svelte"
-import MikuPlayer from "./Views/MikuPlayer.svelte"
-import GetChicken from "./Views/GetChicken.svelte"
-import FormChicken from "./Views/FormChicken.svelte"
-import Studio from "./Views/Studio.svelte"
+import type { Route } from 'svelte-router-spa/types/components/router'
+import Overture from './Overture.svelte'
+import Redirect from './Stuff/Redirect.svelte'
+import CentreStage from './Views/CentreStage.svelte'
+import Books from './Views/Books.svelte'
+import Tests from './Views/Tests.svelte'
+import Scrollers from './tests/Scrollers.svelte'
+import TimeShape from './Views/TimeShape.svelte'
+import MikuPlayer from './Views/MikuPlayer.svelte'
+import GetChicken from './Views/GetChicken.svelte'
+import FormChicken from './Views/FormChicken.svelte'
+import Studio from './Views/Studio.svelte'
 
-export type RouteRole = "major" | "minor"
+export type RouteRole = 'major' | 'minor'
 export type DetailedRoute = Route & {
     type?: RouteRole
     label?: string
@@ -19,54 +19,54 @@ export type DetailedRoute = Route & {
 
 export const routes: DetailedRoute[] = [
     {
-        name: "/",
+        name: '/',
         component: Redirect,
     },
     {
-        name: "Overture",
-        label: "Overture",
+        name: 'Overture',
+        label: 'Overture',
         component: Overture,
-        type: "major",
+        type: 'major',
     },
     {
-        name: "CentreStage",
+        name: 'CentreStage',
         component: CentreStage,
     },
     {
-        name: "Books",
-        label: "Books",
+        name: 'Books',
+        label: 'Books',
         component: Books,
-        type: "major",
+        type: 'major',
     },
     {
-        name: "Scrollers",
+        name: 'Scrollers',
         component: Scrollers,
     },
     {
-        name: "Chicken",
+        name: 'Chicken',
         component: GetChicken,
     },
 ]
 
 export const testRoutes: DetailedRoute[] = [
     {
-        name: "Tests",
+        name: 'Tests',
         component: Tests,
     },
     {
-        name: "TimeShape",
+        name: 'TimeShape',
         component: TimeShape,
     },
     {
-        name: "MikuPlayer",
+        name: 'MikuPlayer',
         component: MikuPlayer,
     },
     {
-        name: "FormChicken",
+        name: 'FormChicken',
         component: FormChicken,
     },
     {
-        name: "Studio",
+        name: 'Studio',
         component: Studio,
     },
 ]

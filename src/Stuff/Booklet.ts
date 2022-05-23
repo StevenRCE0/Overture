@@ -1,6 +1,6 @@
-import * as THREE from "three"
-import { toTitleCase, wrapText } from "../workers/textProcess"
-import { Canvg } from "canvg"
+import * as THREE from 'three'
+import { toTitleCase, wrapText } from '../workers/textProcess'
+import { Canvg } from 'canvg'
 
 // Use 360 * 566 for the size of the cover image
 export interface BookletProps {
@@ -22,7 +22,7 @@ class BookLet {
     book: THREE.Object3D
     tape: Promise<THREE.Object3D>
     tapeFont = "'Times New Roman', 'Noto Serif SC', Times, serif"
-    catLocation = "./readingCat.svg"
+    catLocation = './readingCat.svg'
     coverLoaded = new Promise((resolve) => {
         setInterval(() => {
             if (this.loaded) {
@@ -70,8 +70,8 @@ class BookLet {
     }
 
     printTape = async () => {
-        const tapeText = document.createElement("canvas")
-        const glyphs = tapeText.getContext("2d")
+        const tapeText = document.createElement('canvas')
+        const glyphs = tapeText.getContext('2d')
         let writerOffset = ratioPixels(38)
         const tapeGeometry = new THREE.BoxBufferGeometry(
             this.tapeDimensions.width,
@@ -81,13 +81,13 @@ class BookLet {
 
         tapeText.width = ratioPixels(this.tapeDimensions.width)
         tapeText.height = ratioPixels(this.tapeDimensions.height)
-        glyphs.fillStyle = "hsl(27, 23%, 96%)"
+        glyphs.fillStyle = 'hsl(27, 23%, 96%)'
         glyphs.fillRect(0, 0, tapeText.width, tapeText.height)
 
         // Printing Title
         glyphs.font = `bold ${this.tapeDimensions.titleSize}pt ${this.tapeFont}`
-        glyphs.fillStyle = "black"
-        glyphs.textAlign = "center"
+        glyphs.fillStyle = 'black'
+        glyphs.textAlign = 'center'
         writerOffset +=
             wrapText(
                 glyphs,
@@ -101,8 +101,8 @@ class BookLet {
 
         // Printing Author
         glyphs.font = `${this.tapeDimensions.authorSize}pt ${this.tapeFont}`
-        glyphs.fillStyle = "#666"
-        glyphs.textAlign = "center"
+        glyphs.fillStyle = '#666'
+        glyphs.textAlign = 'center'
         writerOffset +=
             wrapText(
                 glyphs,
@@ -118,7 +118,7 @@ class BookLet {
 
         if (this.preferences.reading) {
             // Printing Reading Cat
-            glyphs.fillStyle = "#999"
+            glyphs.fillStyle = '#999'
             await this.printReadingCat(
                 glyphs,
                 0,
@@ -126,7 +126,7 @@ class BookLet {
                     writerOffset +
                     ratioPixels(50)
             )
-            glyphs.textAlign = "center"
+            glyphs.textAlign = 'center'
             glyphs.fillText(
                 "I'm reading...",
                 ratioPixels(this.tapeDimensions.width) / 2,
@@ -135,8 +135,8 @@ class BookLet {
         } else {
             // Printing Comment
             glyphs.font = `normal ${this.tapeDimensions.commentSize}pt ${this.tapeFont}`
-            glyphs.fillStyle = "black"
-            glyphs.textAlign = "left"
+            glyphs.fillStyle = 'black'
+            glyphs.textAlign = 'left'
             writerOffset +=
                 wrapText(
                     glyphs,
@@ -167,11 +167,11 @@ class BookLet {
 
     constructor(preferences: BookletProps) {
         let presetProps = {
-            cover: "",
+            cover: '',
             colour: 0xe3e3e3,
-            title: "Tape title test",
-            author: "Author",
-            comment: "推荐的话语正在等待着被编写……",
+            title: 'Tape title test',
+            author: 'Author',
+            comment: '推荐的话语正在等待着被编写……',
         }
         this.preferences = Object.assign(presetProps, preferences)
         if (this.preferences.cover.length === 0 && !this.preferences.reading) {

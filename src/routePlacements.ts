@@ -1,4 +1,4 @@
-export type RouteRole = "major" | "minor"
+export type RouteRole = 'major' | 'minor'
 export type GenericRouteProps = {
     type: RouteRole
     target: string
@@ -7,13 +7,13 @@ export type GenericRouteProps = {
 
 export const navigationList: Array<GenericRouteProps> = [
     {
-        type: "major",
-        target: "/Overture",
-        label: "Overture",
+        type: 'major',
+        target: '/Overture',
+        label: 'Overture',
     },
     {
-        type: "major",
-        target: "/Books",
-        label: "Books",
+        type: 'major',
+        target: '/Books',
+        label: 'Books',
     },
 ]

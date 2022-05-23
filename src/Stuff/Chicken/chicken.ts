@@ -1,6 +1,6 @@
 export interface NotionConnection {
-    token: ""
-    database: ""
+    token: ''
+    database: ''
 }
 export interface ChickenCard {
     name: string
@@ -28,11 +28,11 @@ const submitQuery = async (
     connectionConfiguration: NotionConnection,
     query: object
 ): Promise<Response> => {
-    const response = await fetch("https://api.notion.com/v1/pages", {
-        method: "POST",
+    const response = await fetch('https://api.notion.com/v1/pages', {
+        method: 'POST',
         headers: {
             Authorization: connectionConfiguration.token,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             query,
