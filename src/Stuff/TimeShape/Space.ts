@@ -12,16 +12,17 @@ export default class Space {
     eventShapes: THREE.Object3D<THREE.Event>[]
 
     spaceCompliance = (events: TimeEvent[]) => {
-        const timeStamps = events.map(event => event.properties.timestamp)
+        const timeStamps = events.map((event) => event.properties.timestamp)
         const timeSpan = Math.max(...timeStamps) - Math.min(...timeStamps)
         const timeBaseOffset = Math.min(...timeStamps)
         const timeScale = timeSpan / 200
 
-        this.eventShapes = events.map(event => {
-            event.geometry.translateZ((event.properties.timestamp - timeBaseOffset) * timeScale)
+        this.eventShapes = events.map((event) => {
+            event.geometry.translateZ(
+                (event.properties.timestamp - timeBaseOffset) * timeScale
+            )
             return event.geometry
         })
-
     }
 
     constructor(parameters: SpaceProperties) {

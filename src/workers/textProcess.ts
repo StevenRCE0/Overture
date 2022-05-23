@@ -66,10 +66,8 @@ export function wrapText(
         var testLine = line + words[n] + splitSpace
         var metrics = context.measureText(testLine)
         var testWidth = metrics.width
-        if (
-            words[n].charAt(0) === "\n"
-        ) {
-            line = line.replace(/\s*$/, '')
+        if (words[n].charAt(0) === "\n") {
+            line = line.replace(/\s*$/, "")
             context.fillText(line, x, y)
             line = words[n] + splitSpace
             y += lineHeight * 2
