@@ -33,15 +33,16 @@ export default class TimeEvent {
     geometry: THREE.Object3D<THREE.Event>
 
     shapeFormation = (params: ShapeFormationProps) => {
-        const baseShape = new THREE.Shape()
-
         const thicknessBase = params.urgency
         const thicknessPedal = params.urgency / 2
         const height = params.importance
         const offset = params.revelance * height
         const alphaAngle = ((clamp(params.preference, 0, 1) + 1) * Math.PI) / 3
 
-        baseShape.moveTo(-thicknessBase / 2, 0)
+        // Geometry generation
+        const baseShape = new THREE.Shape()
+
+        baseShape.moveTo(-thicknessBase, 0)
         baseShape.bezierCurveTo(
             -params.urgency,
             params.importance / 2,
@@ -74,18 +75,28 @@ export default class TimeEvent {
             -params.urgency,
             0
         )
+        const extrudeSettings: THREE.ExtrudeGeometryOptions = {
+            steps: 2,
+            depth: 1.5,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 1,
+            bevelOffset: 0,
+            bevelSegments: 1
+        }
+        const vessel = new THREE.ExtrudeGeometry(baseShape, extrudeSettings)
+
+        // Material generation
         const baseMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
             roughness: 0.5,
             metalness: 0.2,
         })
-        const vessel = new THREE.ExtrudeGeometry(baseShape, {
-            steps: 1,
-            bevelEnabled: false,
-        })
+        
         const vesselMesh = new THREE.Mesh(vessel, baseMaterial)
         vesselMesh.receiveShadow = true
         vesselMesh.castShadow = true
+
         return vesselMesh
     }
 
