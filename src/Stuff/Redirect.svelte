@@ -1,5 +1,7 @@
+<!--suppress JSUnresolvedVariable -->
 <script lang="ts">
     import { onMount } from "svelte"
+
     let timeCounter: NodeJS.Timeout = null
     $: triggerText = timeCounter ? "Stop" : "Continue"
     const target = "https://c.rcex.live:8"
@@ -11,6 +13,7 @@
             }, 5000)
         }
     })
+
     function triggerHandler() {
         if (!timeCounter) {
             window.location.replace(target)
@@ -23,10 +26,23 @@
 
 <title>Coils</title>
 <main>
-    <!-- @ts-ignore -->
-    <h1>We're{isProduction ? "" : " (not)"} heading to the good old website for now...</h1>
-    <button id="Trigger" on:click={() => triggerHandler()}>{triggerText}</button
-    >
+    <section class="BottomRight">
+        <h1>
+            We're{isProduction ? "" : " (not)"} heading to the good old website for
+            now...
+        </h1>
+        <button
+            class="Trigger"
+            on:click={() => {
+                window.open("https://github.com/StevenRCE0/Overture", "_blank")
+            }}
+        >
+            This Repo
+        </button>
+        <button class="Trigger" on:click={triggerHandler}>
+            {triggerText}
+        </button>
+    </section>
 </main>
 
 <style>
@@ -37,26 +53,30 @@
         transition: 1s background-color;
         background-color: #fff;
         text-align: right;
-        box-shadow: inset 10pt 10pt hsl(215, 95%, 27%),
-            inset -10pt -10pt hsl(215, 95%, 27%);
+        outline: 10pt solid hsl(215, 95%, 27%);
+        outline-offset: -10pt;
     }
+
     @media screen and (prefers-color-scheme: dark) {
         main {
             background-color: hsl(167, 4%, 54%);
         }
     }
-    h1 {
-        display: block;
+
+    .BottomRight {
         position: absolute;
-        right: 1em;
-        bottom: calc(10pt + 25pt + 1.5em);
+        right: 1.5em;
+        bottom: 1.6em;
+    }
+
+    h1 {
+        margin: 0.2em;
+        font-size: 2em;
         text-transform: capitalize;
     }
-    #Trigger {
+
+    .Trigger {
         z-index: 9;
-        position: absolute;
-        right: 1em;
-        bottom: 10pt;
         background: none;
         border: none;
         color: #555;
