@@ -23,7 +23,8 @@
 
 <title>Coils</title>
 <main>
-    <h1>We're heading to the good old website for now...</h1>
+    <!-- @ts-ignore -->
+    <h1>We're{isProduction ? "" : " (not)"} heading to the good old website for now...</h1>
     <button id="Trigger" on:click={() => triggerHandler()}>{triggerText}</button
     >
 </main>
