@@ -1,5 +1,5 @@
-import type { Route } from 'svelte-router-spa/types/components/router'
-import Overture from './Overture.svelte'
+import type {Route} from 'svelte-router-spa/types/components/router'
+import Overture from './Views/Overture.svelte'
 import Redirect from './Stuff/Redirect.svelte'
 import CentreStage from './Views/CentreStage.svelte'
 import Books from './Views/Books.svelte'
@@ -10,11 +10,13 @@ import MikuPlayer from './Views/MikuPlayer.svelte'
 import GetChicken from './Views/GetChicken.svelte'
 import FormChicken from './Views/FormChicken.svelte'
 import Studio from './Views/Studio.svelte'
+import GraphRec from './Views/GraphRec.svelte'
 
 export type RouteRole = 'major' | 'minor'
 export type DetailedRoute = Route & {
     type?: RouteRole
     label?: string
+    target?: "_blank" | "_self"
 }
 
 export const routes: DetailedRoute[] = [
@@ -69,6 +71,11 @@ export const testRoutes: DetailedRoute[] = [
         name: 'Studio',
         component: Studio,
     },
+    {
+        name: 'GR',
+        component: GraphRec
+    }
 ]
-export const finalRoutes = // @ts-ignore
-    (isProduction ? routes : routes.concat(testRoutes)) as Route[]
+
+// @ts-ignore
+export const finalRoutes = (isProduction ? routes : routes.concat(testRoutes)) as Route[];
