@@ -1,6 +1,6 @@
 // @ts-ignore
-import * as THREE from 'three'
-import type TimeEvent from './Event'
+import * as THREE from "three"
+import type TimeEvent from "./Event"
 
 export interface SpaceProperties {
     events: TimeEvent[]

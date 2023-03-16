@@ -10,7 +10,7 @@ import MikuPlayer from './Views/MikuPlayer.svelte'
 import GetChicken from './Views/GetChicken.svelte'
 import FormChicken from './Views/FormChicken.svelte'
 import Studio from './Views/Studio.svelte'
-import GraphRec from './Views/GraphRec.svelte'
+import GraphRec from './Views/Works/GraphRec.svelte'
 
 export type RouteRole = 'major' | 'minor'
 export type DetailedRoute = Route & {
