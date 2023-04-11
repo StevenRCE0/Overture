@@ -16,4 +16,9 @@ export const navigationList: Array<GenericRouteProps> = [
         target: '/Books',
         label: 'Books',
     },
+    {
+        type: 'major',
+        target: '/Blog',
+        label: 'Blog',
+    },
 ]
