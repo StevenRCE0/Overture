@@ -11,7 +11,9 @@
             const index = blogIndex.indexOf(entry)
             entry.content().then((content) => {
                 indexes[index] = {
-                    ...entry,
+                    title: entry.title,
+                    date: entry.date,
+                    category: entry.category,
                     content: content,
                 }
             })
