@@ -26,9 +26,13 @@
     <hr />
     {#each indexes as entry}
         <h2>{entry.title}</h2>
-        <section class="Article">
-            <SvelteMarkdown source={entry.content} />
-        </section>
+        {#if entry.content}
+            <section class="Article">
+                <SvelteMarkdown source={entry.content} />
+            </section>
+        {:else}
+            <p>...</p>
+        {/if}
     {/each}
 </main>
 
