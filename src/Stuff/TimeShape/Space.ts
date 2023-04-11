@@ -5,6 +5,7 @@ import type TimeEvent from "./Event"
 export interface SpaceProperties {
     events: TimeEvent[]
     axis: THREE.Vector3
+    timeScale: number
 }
 
 export default class Space {
@@ -15,11 +16,11 @@ export default class Space {
         const timeStamps = events.map((event) => event.properties.timestamp)
         const timeSpan = Math.max(...timeStamps) - Math.min(...timeStamps)
         const timeBaseOffset = Math.min(...timeStamps)
-        const timeScale = timeSpan / 200
+        const timeScale = timeSpan / 400
 
         this.eventShapes = events.map((event) => {
             event.geometry.translateZ(
-                (event.properties.timestamp - timeBaseOffset) * timeScale
+                (event.properties.timestamp - timeBaseOffset) * timeScale - 50
             )
             return event.geometry
         })

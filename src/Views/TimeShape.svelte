@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as THREE from "three"
+    // import { DragControls } from "three/examples/jsm/controls/DragControls"
     import CentreStage from "./CentreStage.svelte"
     import Space from "../Stuff/TimeShape/Space"
     import TimeEvent from "../Stuff/TimeShape/Event"
@@ -8,34 +9,69 @@
     import { onMount } from "svelte"
 
     var camera: THREE.PerspectiveCamera
-    const cameraMountpoints = {
+    const cameraMountPoints = {
         perspective: {
             position: new THREE.Vector3(-100, 25, 75),
             rotation: new THREE.Euler(-Math.PI / 8, -Math.PI / 3, 0),
         },
     }
     function applyCameraMount(
-        mountpoint: typeof cameraMountpoints.perspective,
+        mountPoint: typeof cameraMountPoints.perspective,
         camera: THREE.PerspectiveCamera
     ) {
-        camera.rotation.copy(mountpoint.rotation)
-        camera.position.copy(mountpoint.position)
+        camera.rotation.copy(mountPoint.rotation)
+        camera.position.copy(mountPoint.position)
     }
+
 
     const foobarEvents: EventSource[] = [
         {
+            id: "a",
             eventTitle: "",
             timestamp: 0,
             importance: 20,
             urgency: 30,
-            revelance: 0.5
+            relevance: 0.5
         },
         {
+            id: "a",
             eventTitle: "",
             timestamp: 40,
             importance: 22,
             urgency: 10,
-            revelance: 0.7
+            relevance: 0.7
+        },
+        {
+            id: "a",
+            eventTitle: "",
+            timestamp: 70,
+            importance: 20,
+            urgency: 30,
+            relevance: 0.5
+        },
+        {
+            id: "a",
+            eventTitle: "",
+            timestamp: 140,
+            importance: 22,
+            urgency: 10,
+            relevance: 0.7
+        },
+        {
+            id: "a",
+            eventTitle: "",
+            timestamp: 150,
+            importance: 20,
+            urgency: 30,
+            relevance: 0.5
+        },
+        {
+            id: "a",
+            eventTitle: "",
+            timestamp: 180,
+            importance: 22,
+            urgency: 10,
+            relevance: 0.7
         },
     ]
 
@@ -46,10 +82,15 @@
         axis: new THREE.Vector3(0, 0, 0),
     }
 
+    // make the perspective camera draggable
+    // const dragControls = new DragControls(
+    //     [camera],
+    //     document.getElementById("canvas")
+    // )
     const space = new Space(spaceParameterConstructed)
 
     onMount(() => {
-        applyCameraMount(cameraMountpoints.perspective, camera)
+        applyCameraMount(cameraMountPoints.perspective, camera)
     })
 </script>
 
