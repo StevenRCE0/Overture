@@ -23,7 +23,7 @@
 
 <title>Blog</title>
 <main>
-    <h1>Just s Simple Markdown Blog</h1>
+    <h1>Just Some Simple Markdown Blog</h1>
     <hr />
     {#each indexes as entry}
         <h2>{entry.title}</h2>
