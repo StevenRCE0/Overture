@@ -22,22 +22,23 @@
 </script>
 
 <svelte:head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Blog</title>
 </svelte:head>
 
-<h1>Just Some Simple Markdown Blog</h1>
-<hr />
-{#each indexes as entry}
-    <h2>{entry.title}</h2>
-    {#if entry.content}
-        <section class="Article">
-            <SvelteMarkdown source={entry.content} />
-        </section>
-    {:else}
-        <p>...</p>
-    {/if}
-{/each}
+<main>
+    <h1>Just Some Simple Markdown Blog</h1>
+    <hr />
+    {#each indexes as entry}
+        <h2>{entry.title}</h2>
+        {#if entry.content}
+            <section class="Article">
+                <SvelteMarkdown source={entry.content} />
+            </section>
+        {:else}
+            <p>...</p>
+        {/if}
+    {/each}
+</main>
 
 <style>
     .Article {
