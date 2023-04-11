@@ -21,6 +21,7 @@
     })
 </script>
 
+<title>Blog</title>
 <main>
     <h1>Just s Simple Markdown Blog</h1>
     <hr />
