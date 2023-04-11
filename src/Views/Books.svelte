@@ -1,183 +1,18 @@
-<script lang="ts">
-    import CentreStage from "../Views/CentreStage.svelte"
-    import Booklet from "../Stuff/Booklet"
-    import Counter from "../Stuff/Counter"
-    import { fetchBook } from "../workers/gistParser"
-    import { watchResize } from "svelte-watch-resize"
-    import { onMount } from "svelte"
-    import { cubicInOut } from "svelte/easing"
-    import { tweened } from "svelte/motion"
-    import { fade } from "svelte/transition"
-    import { Swiper, SwiperSlide } from "swiper/svelte"
-    import { Mousewheel, Keyboard } from "swiper"
-    import "swiper/css"
-    import "../../public/sourceFont.css"
+<script lang='ts' ✂prettier:content✂="CiAgICBpbXBvcnQgQ2VudHJlU3RhZ2UgZnJvbSAnLi4vVmlld3MvQ2VudHJlU3RhZ2Uuc3ZlbHRlJwogICAgaW1wb3J0IEJvb2tsZXQgZnJvbSAnLi4vU3R1ZmYvQm9va2xldCcKICAgIGltcG9ydCBDb3VudGVyIGZyb20gJy4uL1N0dWZmL0NvdW50ZXInCiAgICBpbXBvcnQgeyBmZXRjaEJvb2sgfSBmcm9tICcuLi93b3JrZXJzL2dpc3RQYXJzZXInCiAgICBpbXBvcnQgeyB3YXRjaFJlc2l6ZSB9IGZyb20gJ3N2ZWx0ZS13YXRjaC1yZXNpemUnCiAgICBpbXBvcnQgeyBvbk1vdW50IH0gZnJvbSAnc3ZlbHRlJwogICAgaW1wb3J0IHsgY3ViaWNJbk91dCB9IGZyb20gJ3N2ZWx0ZS9lYXNpbmcnCiAgICBpbXBvcnQgeyB0d2VlbmVkIH0gZnJvbSAnc3ZlbHRlL21vdGlvbicKICAgIGltcG9ydCB7IGZhZGUgfSBmcm9tICdzdmVsdGUvdHJhbnNpdGlvbicKICAgIGltcG9ydCB7IFN3aXBlciwgU3dpcGVyU2xpZGUgfSBmcm9tICdzd2lwZXIvc3ZlbHRlJwogICAgaW1wb3J0IHsgTW91c2V3aGVlbCwgS2V5Ym9hcmQgfSBmcm9tICdzd2lwZXInCiAgICBpbXBvcnQgJ3N3aXBlci9jc3MnCiAgICBpbXBvcnQgJy4uLy4uL3B1YmxpYy9zb3VyY2VGb250LmNzcycKCiAgICBpbnRlcmZhY2UgQm9va09uU2hlbGYgewogICAgICAgIGJvb2s6IFRIUkVFLk9iamVjdDNEPFRIUkVFLkV2ZW50PgogICAgICAgIHRhcGU/OiBUSFJFRS5PYmplY3QzRDxUSFJFRS5FdmVudD4KICAgIH0KCiAgICBsZXQgbG9hZGluZyA9IHRydWUKICAgIGxldCBib29rU2hlbGYgPSBuZXcgQXJyYXk8Qm9va09uU2hlbGY+KCkKICAgIGxldCBpdGVtQnVmZmVyID0gbmV3IEFycmF5PFRIUkVFLk9iamVjdDNEPFRIUkVFLkV2ZW50Pj4oKQogICAgbGV0IGNvdW50ZXJCdWZmZXI6IFRIUkVFLk9iamVjdDNEPFRIUkVFLkV2ZW50PltdID0gW10KICAgIGxldCBzY3JvbGxlcnM6IG51bWJlcltdID0gW10KICAgIGxldCBzY3JvbGxpbmdCbG9ja3M6IEhUTUxFbGVtZW50W10gPSBbXQogICAgbGV0IHN0YWdlOiBDZW50cmVTdGFnZQogICAgY29uc3QgZmluZU9mZnNldCA9IHR3ZWVuZWQoMCwgewogICAgICAgIGR1cmF0aW9uOiAyMDAwLAogICAgICAgIGVhc2luZzogY3ViaWNJbk91dCwKICAgIH0pCiAgICBmaW5lT2Zmc2V0LnN1YnNjcmliZSgodmFsdWUpID0+IHsKICAgICAgICBoYW5kbGVTd2l0Y2godmFsdWUpCiAgICB9KQogICAgY29uc3QgU3BhY2VyID0gMSAvIDQKCiAgICBsZXQgZmlndXJlOiBDb3VudGVyCgogICAgJDogaW5uZXJXaWR0aCA9IHdpbmRvdy5pbm5lcldpZHRoCiAgICAkOiBpbm5lckhlaWdodCA9IHdpbmRvdy5pbm5lckhlaWdodAoKICAgICQ6IG91dHRhU2NhbGUgPSBjb3VudGVyQnVmZmVyCiAgICAgICAgLmZpbHRlcigoeCwgaSkgPT4gaSAlIDMgPT09IDEpCiAgICAgICAgLm1hcCgoZW50cnksIGluZGV4KSA9PgogICAgICAgICAgICBNYXRoLm1heCgwLCAxIC0gc2Nyb2xsZXJzW2luZGV4XSAvIChpbm5lckhlaWdodCAvIDIwKSksCiAgICAgICAgKQoKICAgIGZ1bmN0aW9uIGNsYW1wKHZhbHVlOiBudW1iZXIsIG1pbjogbnVtYmVyLCBtYXg6IG51bWJlcikgewogICAgICAgIHJldHVybiBNYXRoLm1heChtaW4sIE1hdGgubWluKG1heCwgdmFsdWUpKQogICAgfQoKICAgIGZ1bmN0aW9uIGhhbmRsZVN3aXRjaChudW1iZXI6IG51bWJlcikgewogICAgICAgIGJvb2tTaGVsZi5tYXAoKGJvb2ssIGluZGV4KSA9PiB7CiAgICAgICAgICAgIGJvb2suYm9vay50cmFuc2xhdGVYKAogICAgICAgICAgICAgICAgLShudW1iZXIgLSBpbmRleCkgKiBpbm5lcldpZHRoICogU3BhY2VyIC0gYm9vay5ib29rLnBvc2l0aW9uLngsCiAgICAgICAgICAgICkKICAgICAgICAgICAgYm9vay50YXBlPy50cmFuc2xhdGVYKAogICAgICAgICAgICAgICAgLShudW1iZXIgLSBpbmRleCkgKiBpbm5lcldpZHRoICogU3BhY2VyIC0gYm9vay50YXBlLnBvc2l0aW9uLngsCiAgICAgICAgICAgICkKICAgICAgICAgICAgY291bnRlckJ1ZmZlcgogICAgICAgICAgICAgICAgLnNsaWNlKGluZGV4ICogMywgaW5kZXggKiAzICsgMykKICAgICAgICAgICAgICAgIC5tYXAoKGVudHJ5LCBlbnRyeUluZGV4KSA9PgogICAgICAgICAgICAgICAgICAgIGVudHJ5LnRyYW5zbGF0ZVgoCiAgICAgICAgICAgICAgICAgICAgICAgIC0obnVtYmVyIC0gaW5kZXgpICogaW5uZXJXaWR0aCAqIFNwYWNlciArCiAgICAgICAgICAgICAgICAgICAgICAgIChlbnRyeUluZGV4IC0gMSkgKiAoMiAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvKSAqIDMwIC0KICAgICAgICAgICAgICAgICAgICAgICAgZW50cnkucG9zaXRpb24ueCwKICAgICAgICAgICAgICAgICAgICApLAogICAgICAgICAgICAgICAgKQogICAgICAgIH0pCiAgICAgICAgc3RhZ2U/LnJlbmRlcigpCiAgICB9CgogICAgZnVuY3Rpb24gaGFuZGxlU2Nyb2xsKGluZGV4OiBudW1iZXIpIHsKICAgICAgICBib29rU2hlbGZbaW5kZXhdLnRhcGU/LnRyYW5zbGF0ZVkoCiAgICAgICAgICAgIHNjcm9sbGVyc1tpbmRleF0gLyAzIC0gYm9va1NoZWxmW2luZGV4XS50YXBlLnBvc2l0aW9uLnksCiAgICAgICAgKQogICAgICAgIGJvb2tTaGVsZltpbmRleF0uYm9vay5yb3RhdGVYKAogICAgICAgICAgICAoKHNjcm9sbGVyc1tpbmRleF0gLyA4IC0gNDApICogTWF0aC5QSSkgLyAzNjAgLQogICAgICAgICAgICBib29rU2hlbGZbaW5kZXhdLmJvb2sucm90YXRpb24ueCwKICAgICAgICApCiAgICAgICAgYm9va1NoZWxmW2luZGV4XS5ib29rLnRyYW5zbGF0ZVkoCiAgICAgICAgICAgIC1jbGFtcCgtc2Nyb2xsZXJzW2luZGV4XSAvIDMuNSAtIDUsIC01MCwgLTEyLjUpIC0KICAgICAgICAgICAgYm9va1NoZWxmW2luZGV4XS5ib29rLnBvc2l0aW9uLnksCiAgICAgICAgKQogICAgICAgIGNvbnN0IGFwcGx5Qm9va1Njcm9sbFNjYWxlID0gTWF0aC5tYXgoCiAgICAgICAgICAgIDEgLSBzY3JvbGxlcnNbaW5kZXhdIC8gKGlubmVySGVpZ2h0IC8gMy41KSwKICAgICAgICAgICAgMC41LAogICAgICAgICkKICAgICAgICBib29rU2hlbGZbaW5kZXhdLmJvb2suc2NhbGUuc2V0KAogICAgICAgICAgICBhcHBseUJvb2tTY3JvbGxTY2FsZSwKICAgICAgICAgICAgYXBwbHlCb29rU2Nyb2xsU2NhbGUsCiAgICAgICAgICAgIGFwcGx5Qm9va1Njcm9sbFNjYWxlLAogICAgICAgICkKICAgICAgICBjb3VudGVyQnVmZmVyCiAgICAgICAgICAgIC5maWx0ZXIoKHgsIGkpID0+IGkgJSAzID09PSAxKQogICAgICAgICAgICBbaW5kZXhdLnNjYWxlLnNldChvdXR0YVNjYWxlW2luZGV4XSwgb3V0dGFTY2FsZVtpbmRleF0sIDEpCgogICAgICAgIHN0YWdlPy5yZW5kZXIoKQogICAgfQoKICAgIG9uTW91bnQoKCkgPT4gewogICAgICAgIGZldGNoQm9vaygnL2dpc3QvU3RldmVuUkNFMC9hNjg0NjA0MjI5MzdmMTgyYmM1OTE3ODhmYTMwZTkzMC9yYXcnKS50aGVuKAogICAgICAgICAgICAoYm9va3MpID0+IHsKICAgICAgICAgICAgICAgIGJvb2tzLm1hcChhc3luYyAoYm9va0luZm9ybWF0aW9uLCBib29rSW5kZXgpID0+IHsKICAgICAgICAgICAgICAgICAgICBjb25zdCBuZXdCb29rID0gbmV3IEJvb2tsZXQoYm9va0luZm9ybWF0aW9uKQogICAgICAgICAgICAgICAgICAgIHNjcm9sbGVycy5wdXNoKDApCiAgICAgICAgICAgICAgICAgICAgZmlndXJlID0gbmV3IENvdW50ZXIoYm9va3MubGVuZ3RoLCBib29rSW5kZXggKyAxLCAwLjc1KQogICAgICAgICAgICAgICAgICAgIGJvb2tTaGVsZiA9IFsuLi5ib29rU2hlbGYsIHsgYm9vazogbmV3Qm9vay5ib29rIH1dCiAgICAgICAgICAgICAgICAgICAgY291bnRlckJ1ZmZlciA9IFsKICAgICAgICAgICAgICAgICAgICAgICAgLi4uY291bnRlckJ1ZmZlciwKICAgICAgICAgICAgICAgICAgICAgICAgZmlndXJlLmRpZ2l0Q3VycmVudCwKICAgICAgICAgICAgICAgICAgICAgICAgZmlndXJlLm91dE9mLAogICAgICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRUb3RhbCwKICAgICAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgICAgICAgICAgbmV3Qm9vay5ib29rLnJvdGF0ZVgoCiAgICAgICAgICAgICAgICAgICAgICAgICgtNDAgKiBNYXRoLlBJKSAvIDM2MCAtIG5ld0Jvb2suYm9vay5yb3RhdGlvbi54LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBuZXdCb29rLmJvb2sudHJhbnNsYXRlWSgxNSkKICAgICAgICAgICAgICAgICAgICBuZXdCb29rLmJvb2sudHJhbnNsYXRlWigtNSkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRDdXJyZW50LnRyYW5zbGF0ZVgoCiAgICAgICAgICAgICAgICAgICAgICAgIGJvb2tJbmRleCAqIGlubmVyV2lkdGggKiBTcGFjZXIsCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGZpZ3VyZS5kaWdpdFRvdGFsLnRyYW5zbGF0ZVgoCiAgICAgICAgICAgICAgICAgICAgICAgIGJvb2tJbmRleCAqIGlubmVyV2lkdGggKiBTcGFjZXIsCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGZpZ3VyZS5vdXRPZi50cmFuc2xhdGVYKGJvb2tJbmRleCAqIGlubmVyV2lkdGggKiBTcGFjZXIpCiAgICAgICAgICAgICAgICAgICAgZmlndXJlLmRpZ2l0Q3VycmVudC50cmFuc2xhdGVYKAogICAgICAgICAgICAgICAgICAgICAgICAoMiAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvKSAqIC0zMCwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgZmlndXJlLmRpZ2l0Q3VycmVudC50cmFuc2xhdGVZKAogICAgICAgICAgICAgICAgICAgICAgICA0MCAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvICsgaW5uZXJIZWlnaHQgKiAwLjA2LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRDdXJyZW50LnRyYW5zbGF0ZVooCiAgICAgICAgICAgICAgICAgICAgICAgICgyIC8gd2luZG93LmRldmljZVBpeGVsUmF0aW8pICogLTc1LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRUb3RhbC50cmFuc2xhdGVYKAogICAgICAgICAgICAgICAgICAgICAgICAoMiAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvKSAqIDMwLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRUb3RhbC50cmFuc2xhdGVZKAogICAgICAgICAgICAgICAgICAgICAgICA0MCAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvICsgaW5uZXJIZWlnaHQgKiAwLjA2LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUuZGlnaXRUb3RhbC50cmFuc2xhdGVaKAogICAgICAgICAgICAgICAgICAgICAgICAoMiAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvKSAqIC03NSwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgZmlndXJlLm91dE9mLnRyYW5zbGF0ZVkoCiAgICAgICAgICAgICAgICAgICAgICAgIDEwMCAvIHdpbmRvdy5kZXZpY2VQaXhlbFJhdGlvICsgaW5uZXJIZWlnaHQgKiAwLjA0LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmaWd1cmUub3V0T2YudHJhbnNsYXRlWigKICAgICAgICAgICAgICAgICAgICAgICAgKDIgLyB3aW5kb3cuZGV2aWNlUGl4ZWxSYXRpbykgKiAtMTE1LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBuZXdCb29rLmJvb2sudHJhbnNsYXRlWChib29rSW5kZXggKiBpbm5lcldpZHRoICogU3BhY2VyKQogICAgICAgICAgICAgICAgICAgIGl0ZW1CdWZmZXIgPSBbLi4uaXRlbUJ1ZmZlciwgbmV3Qm9vay5ib29rXQogICAgICAgICAgICAgICAgICAgIG5ld0Jvb2suY292ZXJMb2FkZWQudGhlbigoKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHN0YWdlLmRlZXBSZW5kZXIoKQogICAgICAgICAgICAgICAgICAgICAgICBsb2FkaW5nID0gZmFsc2UKICAgICAgICAgICAgICAgICAgICB9KQogICAgICAgICAgICAgICAgICAgIG5ld0Jvb2sudGFwZS50aGVuKCh0YXBlKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhcGUudHJhbnNsYXRlWigtMjApCiAgICAgICAgICAgICAgICAgICAgICAgIHRhcGUudHJhbnNsYXRlWChib29rSW5kZXggKiBpbm5lcldpZHRoICogU3BhY2VyKQogICAgICAgICAgICAgICAgICAgICAgICBib29rU2hlbGZbYm9va0luZGV4XS50YXBlID0gdGFwZQogICAgICAgICAgICAgICAgICAgICAgICBpdGVtQnVmZmVyID0gWy4uLml0ZW1CdWZmZXIsIHRhcGVdCiAgICAgICAgICAgICAgICAgICAgfSkKICAgICAgICAgICAgICAgIH0pCiAgICAgICAgICAgICAgICBzdGFnZT8ucmVuZGVyKCkKICAgICAgICAgICAgfSwKICAgICAgICApCiAgICB9KQo=">{}</script>
 
-    interface BookOnShelf {
-        book: THREE.Object3D<THREE.Event>
-        tape?: THREE.Object3D<THREE.Event>
-    }
-
-    let loading = true
-    let bookShelf = new Array<BookOnShelf>()
-    let itemBuffer = new Array<THREE.Object3D<THREE.Event>>()
-    let counterBuffer: THREE.Object3D<THREE.Event>[] = []
-    let scrollers: number[] = []
-    let scrollingBlocks: HTMLElement[] = []
-    let stage: CentreStage
-    const fineOffset = tweened(0, {
-        duration: 2000,
-        easing: cubicInOut,
-    })
-    fineOffset.subscribe((value) => {
-        handleSwitch(value)
-    })
-    const Spacer = 1 / 4
-
-    let figure: Counter
-
-    $: innerWidth = window.innerWidth
-    $: innerHeight = window.innerHeight
-
-    $: outtaScale = counterBuffer
-        .filter((x, i) => i % 3 === 1)
-        .map((entry, index) =>
-            Math.max(0, 1 - scrollers[index] / (innerHeight / 20))
-        )
-
-    function clamp(value: number, min: number, max: number) {
-        return Math.max(min, Math.min(max, value))
-    }
-
-    function handleSwitch(number: number) {
-        bookShelf.map((book, index) => {
-            book.book.translateX(
-                -(number - index) * innerWidth * Spacer - book.book.position.x
-            )
-            book.tape?.translateX(
-                -(number - index) * innerWidth * Spacer - book.tape.position.x
-            )
-            counterBuffer
-                .slice(index * 3, index * 3 + 3)
-                .map((entry, entryIndex) =>
-                    entry.translateX(
-                        -(number - index) * innerWidth * Spacer +
-                            (entryIndex - 1) * (2 / window.devicePixelRatio) * 30 -
-                            entry.position.x
-                    )
-                )
-        })
-        stage?.render()
-    }
-
-    function handleScroll(index: number) {
-        bookShelf[index].tape?.translateY(
-            scrollers[index] / 3 - bookShelf[index].tape.position.y
-        )
-        bookShelf[index].book.rotateX(
-            ((scrollers[index] / 8 - 40) * Math.PI) / 360 -
-                bookShelf[index].book.rotation.x
-        )
-        bookShelf[index].book.translateY(
-            -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
-                bookShelf[index].book.position.y
-        )
-        const applyBookScrollScale = Math.max(
-            1 - scrollers[index] / (innerHeight / 3.5),
-            0.5
-        )
-        bookShelf[index].book.scale.set(
-            applyBookScrollScale,
-            applyBookScrollScale,
-            applyBookScrollScale
-        )
-        counterBuffer
-            .filter((x, i) => i % 3 === 1)
-            [index].scale.set(outtaScale[index], outtaScale[index], 1)
-
-        stage?.render()
-    }
-
-    onMount(() => {
-        fetchBook("/gist/StevenRCE0/a68460422937f182bc591788fa30e930/raw").then(
-            (books) => {
-                books.map(async (bookInformation, bookIndex) => {
-                    const newBook = new Booklet(bookInformation)
-                    scrollers.push(0)
-                    figure = new Counter(books.length, bookIndex + 1, 0.75)
-                    bookShelf = [...bookShelf, { book: newBook.book }]
-                    counterBuffer = [
-                        ...counterBuffer,
-                        figure.digitCurrent,
-                        figure.outOf,
-                        figure.digitTotal,
-                    ]
-                    newBook.book.rotateX(
-                        (-40 * Math.PI) / 360 - newBook.book.rotation.x
-                    )
-                    newBook.book.translateY(15)
-                    newBook.book.translateZ(-5)
-                    figure.digitCurrent.translateX(
-                        bookIndex * innerWidth * Spacer
-                    )
-                    figure.digitTotal.translateX(
-                        bookIndex * innerWidth * Spacer
-                    )
-                    figure.outOf.translateX(bookIndex * innerWidth * Spacer)
-                    figure.digitCurrent.translateX(
-                        (2 / window.devicePixelRatio) * -30
-                    )
-                    figure.digitCurrent.translateY(
-                        40 / window.devicePixelRatio + innerHeight * 0.06
-                    )
-                    figure.digitCurrent.translateZ(
-                        (2 / window.devicePixelRatio) * -75
-                    )
-                    figure.digitTotal.translateX(
-                        (2 / window.devicePixelRatio) * 30
-                    )
-                    figure.digitTotal.translateY(
-                        40 / window.devicePixelRatio + innerHeight * 0.06
-                    )
-                    figure.digitTotal.translateZ(
-                        (2 / window.devicePixelRatio) * -75
-                    )
-                    figure.outOf.translateY(
-                        100 / window.devicePixelRatio + innerHeight * 0.04
-                    )
-                    figure.outOf.translateZ(
-                        (2 / window.devicePixelRatio) * -115
-                    )
-                    newBook.book.translateX(bookIndex * innerWidth * Spacer)
-                    itemBuffer = [...itemBuffer, newBook.book]
-                    newBook.coverLoaded.then(() => {
-                        stage.deepRender()
-                        loading = false
-                    })
-                    newBook.tape.then((tape) => {
-                        tape.translateZ(-20)
-                        tape.translateX(bookIndex * innerWidth * Spacer)
-                        bookShelf[bookIndex].tape = tape
-                        itemBuffer = [...itemBuffer, tape]
-                    })
-                })
-                stage?.render()
-            }
-        )
-    })
-</script>
-
-<title>Bookshelf</title>
+<svelte:head>
+    <title>Bookshelf</title>
+</svelte:head>
 <main>
     {#if loading}
-        <div id="LoadingPlaceholder" in:fade out:fade>
+        <div id='LoadingPlaceholder' in:fade out:fade>
             Loading
             <br />
-            <span id="SwipeIndicator">Swipe to go for the next book</span>
+            <span id='SwipeIndicator'>Swipe to go for the next book</span>
         </div>
     {/if}
     <div
-        id="BookshelfStage"
+        id='BookshelfStage'
         use:watchResize={() => {
             // book.resize()
             stage.deepRender()
@@ -196,7 +31,7 @@
         mousewheel={{ forceToAxis: true, thresholdDelta: 20 }}
         keyboard={{ enabled: true }}
         modules={[Mousewheel, Keyboard]}
-        style="width: 100vw;"
+        style='width: 100vw;'
         on:slideChange={(e) => {
             fineOffset.set(e.detail[0][0].activeIndex)
         }}
@@ -204,7 +39,7 @@
         {#each bookShelf as book, i}
             <SwiperSlide>
                 <div
-                    class="tall"
+                    class='tall'
                     id={`book-${i}`}
                     bind:this={scrollingBlocks[i]}
                     on:scroll={(e) => {
@@ -214,7 +49,7 @@
                     }}
                 >
                     <div
-                        style="height: calc(100vh + 500pt);"
+                        style='height: calc(100vh + 500pt);'
                         bind:this={scrollingBlocks[i]}
                     />
                 </div>
@@ -223,51 +58,4 @@
     </Swiper>
 </main>
 
-<style>
-    main {
-        position: fixed;
-        height: 0;
-        width: 0;
-        overflow: visible;
-    }
-    .tall {
-        height: 100vh;
-        overflow-y: scroll;
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
-    .tall::-webkit-scrollbar {
-        display: none;
-    }
-    #BookshelfStage {
-        z-index: 0;
-    }
-    #LoadingPlaceholder {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 33pt;
-        font-weight: lighter;
-        text-align: center;
-        color: #666;
-        z-index: 1;
-    }
-    #SwipeIndicator {
-        display: block;
-        font-size: 23pt;
-        animation: SwipeIndication 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-            0.5s forwards;
-    }
-    @keyframes SwipeIndication {
-        0% {
-            transform: translateX(0);
-        }
-        50% {
-            transform: translateX(-10px);
-        }
-        100% {
-            transform: translateX(0);
-        }
-    }
-</style>
+<style ✂prettier:content✂="CiAgICBtYWluIHsKICAgICAgICBwb3NpdGlvbjogZml4ZWQ7CiAgICAgICAgaGVpZ2h0OiAwOwogICAgICAgIHdpZHRoOiAwOwogICAgICAgIG92ZXJmbG93OiB2aXNpYmxlOwogICAgfQoKICAgIC50YWxsIHsKICAgICAgICBoZWlnaHQ6IDEwMHZoOwogICAgICAgIG92ZXJmbG93LXk6IHNjcm9sbDsKICAgICAgICAtbXMtb3ZlcmZsb3ctc3R5bGU6IG5vbmU7IC8qIElFIGFuZCBFZGdlICovCiAgICAgICAgc2Nyb2xsYmFyLXdpZHRoOiBub25lOyAvKiBGaXJlZm94ICovCiAgICB9CgogICAgLnRhbGw6Oi13ZWJraXQtc2Nyb2xsYmFyIHsKICAgICAgICBkaXNwbGF5OiBub25lOwogICAgfQoKICAgICNCb29rc2hlbGZTdGFnZSB7CiAgICAgICAgei1pbmRleDogMDsKICAgIH0KCiAgICAjTG9hZGluZ1BsYWNlaG9sZGVyIHsKICAgICAgICBwb3NpdGlvbjogZml4ZWQ7CiAgICAgICAgdG9wOiA1MCU7CiAgICAgICAgbGVmdDogNTAlOwogICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC01MCUsIC01MCUpOwogICAgICAgIGZvbnQtc2l6ZTogMzNwdDsKICAgICAgICBmb250LXdlaWdodDogbGlnaHRlcjsKICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7CiAgICAgICAgY29sb3I6ICM2NjY7CiAgICAgICAgei1pbmRleDogMTsKICAgIH0KCiAgICAjU3dpcGVJbmRpY2F0b3IgewogICAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICAgIGZvbnQtc2l6ZTogMjNwdDsKICAgICAgICBhbmltYXRpb246IFN3aXBlSW5kaWNhdGlvbiAwLjg1cyBjdWJpYy1iZXppZXIoMC4xNzUsIDAuODg1LCAwLjMyLCAxLjI3NSkgMC41cyBmb3J3YXJkczsKICAgIH0KCiAgICBAa2V5ZnJhbWVzIFN3aXBlSW5kaWNhdGlvbiB7CiAgICAgICAgMCUgewogICAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMCk7CiAgICAgICAgfQogICAgICAgIDUwJSB7CiAgICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgtMTBweCk7CiAgICAgICAgfQogICAgICAgIDEwMCUgewogICAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMCk7CiAgICAgICAgfQogICAgfQo="></style>

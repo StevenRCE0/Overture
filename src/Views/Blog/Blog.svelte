@@ -21,7 +21,9 @@
     })
 </script>
 
-<title>Blog</title>
+<svelte:head>
+    <title>Blog</title>
+</svelte:head>
 <main>
     <h1>Just Some Simple Markdown Blog</h1>
     <hr />
