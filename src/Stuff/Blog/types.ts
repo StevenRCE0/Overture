@@ -15,7 +15,7 @@ export interface Blog extends BlogMeta {
 }
 
 export interface InflatedBlog extends BlogMeta {
-    content: string
+    content?: string
 }
 
 export type BlogList = Blog[]
