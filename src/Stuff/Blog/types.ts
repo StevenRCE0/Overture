@@ -1,4 +1,7 @@
 import type { SvelteComponent } from "svelte"
+import { SvelteComponentTyped } from "svelte"
+
+export class SVXBlogEntry extends SvelteComponentTyped {}
 
 export enum BlogCategory {
     "General" = "General",
@@ -18,7 +21,9 @@ export interface Blog extends BlogMeta {
 }
 
 export interface InflatedBlog extends BlogMeta {
-    content?: string | SvelteComponent
+    fulfilled: boolean
+    content?: string
+    component?: SVXBlogEntry
 }
 
 export type BlogList = Blog[]
