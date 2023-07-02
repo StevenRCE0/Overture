@@ -1,3 +1,5 @@
+import type { SvelteComponent } from "svelte"
+
 export enum BlogCategory {
     "General" = "General",
     "Design" = "Design",
@@ -8,14 +10,15 @@ export interface BlogMeta {
     title: string
     date: Date
     category: BlogCategory[]
+    legacy: boolean
 }
 
 export interface Blog extends BlogMeta {
-    content:  () => Promise<string>
+    content: () => Promise<string> | SvelteComponent
 }
 
 export interface InflatedBlog extends BlogMeta {
-    content?: string
+    content?: string | SvelteComponent
 }
 
 export type BlogList = Blog[]
@@ -24,12 +27,19 @@ export function blog(
     title: string,
     pathName: string,
     category: BlogCategory[],
-    date: Date
+    date: Date,
+    component: SvelteComponent | true = true
 ): Blog {
     return {
         title,
         category,
         date,
-        content: () => fetch(`/blog/${pathName}.md`).then((response) => response.text()),
+        content: component === true
+            ? async () => {
+                  const response = await fetch(`/blog/${pathName}.md`)
+                  return await response.text()
+              }
+            : () => component,
+        legacy: component === true,
     }
 }
