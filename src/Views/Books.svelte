@@ -200,7 +200,7 @@
         modules={[Mousewheel, Keyboard]}
         style="width: 100vw;"
         on:slideChange={(e) => {
-            fineOffset.set(e.detail[0][0].activeIndex)
+            fineOffset.set(e.detail[0].activeIndex)
         }}
     >
         {#each bookShelf as book, i}
