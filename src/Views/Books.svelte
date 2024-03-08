@@ -49,53 +49,61 @@
         return Math.max(min, Math.min(max, value))
     }
 
+    $: switchAnimationId = undefined
+
     function handleSwitch(number: number) {
-        bookShelf.map((book, index) => {
-            book.book.translateX(
-                -(number - index) * innerWidth * Spacer - book.book.position.x
-            )
-            book.tape?.translateX(
-                -(number - index) * innerWidth * Spacer - book.tape.position.x
-            )
-            counterBuffer
-                .slice(index * 3, index * 3 + 3)
-                .map((entry, entryIndex) =>
-                    entry.translateX(
-                        -(number - index) * innerWidth * Spacer +
-                        (entryIndex - 1) * (2 / window.devicePixelRatio) * 30 -
-                        entry.position.x
-                    )
+        if (switchAnimationId) cancelAnimationFrame(switchAnimationId) // Cancel any existing animation
+
+        switchAnimationId = requestAnimationFrame(() => {
+            bookShelf.map((book, index) => {
+                book.book.translateX(
+                    -(number - index) * innerWidth * Spacer -
+                        book.book.position.x
                 )
+                book.tape?.translateX(
+                    -(number - index) * innerWidth * Spacer -
+                        book.tape.position.x
+                )
+                counterBuffer
+                    .slice(index * 3, index * 3 + 3)
+                    .map((entry, entryIndex) =>
+                        entry.translateX(
+                            -(number - index) * innerWidth * Spacer +
+                                (entryIndex - 1) *
+                                    (2 / window.devicePixelRatio) *
+                                    30 -
+                                entry.position.x
+                        )
+                    )
+            })
+            stage?.render()
         })
-        stage?.render()
     }
 
     function handleScroll(index: number) {
-        bookShelf[index].tape?.translateY(
-            scrollers[index] / 3 - bookShelf[index].tape.position.y
-        )
-        bookShelf[index].book.rotateX(
-            ((scrollers[index] / 8 - 40) * Math.PI) / 360 -
-            bookShelf[index].book.rotation.x
-        )
-        bookShelf[index].book.translateY(
-            -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
-            bookShelf[index].book.position.y
-        )
-        const applyBookScrollScale = Math.max(
-            1 - scrollers[index] / (innerHeight / 3.5),
-            0.5
-        )
-        bookShelf[index].book.scale.set(
-            applyBookScrollScale,
-            applyBookScrollScale,
-            applyBookScrollScale
-        )
-        counterBuffer
-            .filter((x, i) => i % 3 === 1)
-            [index].scale.set(outtaScale[index], outtaScale[index], 1)
-
-        stage?.render()
+        requestAnimationFrame(() => {
+            bookShelf[index].tape?.translateY(
+                scrollers[index] / 3 - bookShelf[index].tape.position.y
+            )
+            bookShelf[index].book.rotateX(
+                ((scrollers[index] / 8 - 40) * Math.PI) / 360 -
+                    bookShelf[index].book.rotation.x
+            )
+            bookShelf[index].book.translateY(
+                -clamp(-scrollers[index] / 3.5 - 5, -50, -12.5) -
+                    bookShelf[index].book.position.y
+            )
+            const applyBookScrollScale = Math.max(
+                1 - scrollers[index] / (innerHeight / 3.5),
+                0.5
+            )
+            bookShelf[index].book.scale.set(
+                applyBookScrollScale,
+                applyBookScrollScale,
+                applyBookScrollScale
+            )
+            stage?.render()
+        })
     }
 
     onMount(() => {
@@ -259,7 +267,7 @@
         display: block;
         font-size: 23pt;
         animation: SwipeIndication 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-        0.5s forwards;
+            0.5s forwards;
     }
     @keyframes SwipeIndication {
         0% {
